@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scott's Trainer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f0f0f; --card: #1a1a1a; --orange: #e85d04; --green: #00b894;
+            --blue: #0984e3; --text: #f5f5f5; --muted: #888; --subtle: #bbb;
+            --border: #2a2a2a; --red: #c0392b;
+            --fs: 16px; --fs-sm: 13px; --fs-lg: 20px; --fs-xl: 26px; --fs-xxl: 34px;
+        }
+        body.tv { --fs:22px; --fs-sm:18px; --fs-lg:28px; --fs-xl:36px; --fs-xxl:50px; }
+        body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; font-size:var(--fs); padding:12px; padding-bottom:80px; }
+        .wrap { max-width:900px; margin:0 auto; }
+
+        /* ── HEADER ── */
+        .hdr { background:var(--card); border-radius:10px; padding:16px 16px 12px; text-align:center; position:relative; margin-bottom:12px; }
+        .hdr-date { font-size:var(--fs-sm); color:var(--muted); margin-bottom:3px; }
+        .hdr-title { font-size:var(--fs-xxl); font-weight:800; color:var(--orange); margin-bottom:3px; }
+        .hdr-sub { font-size:var(--fs-sm); color:var(--subtle); font-style:italic; }
+        .tv-btn { position:absolute; top:10px; right:10px; background:var(--border); border:none; color:var(--text); padding:5px 11px; border-radius:6px; font-size:12px; cursor:pointer; font-weight:700; }
+        body.tv .tv-btn { background:var(--orange); color:#000; }
+
+        /* ── WEEK BAR ── */
+        .wbar { background:var(--card); border-radius:10px; padding:12px 14px; margin-bottom:12px; }
+        .wbar-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .wbar-label { font-size:var(--fs-sm); font-weight:700; }
+        .wbtns { display:flex; gap:5px; }
+        .wbtn { padding:5px 13px; background:var(--border); color:var(--text); border:none; border-radius:6px; font-size:var(--fs-sm); cursor:pointer; font-weight:700; }
+        .wbtn.on { background:var(--orange); color:#000; }
+        .pbar { width:100%; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+        .pfill { height:100%; background:var(--orange); border-radius:3px; transition:width .3s; }
+
+        /* ── NAV ── */
+        .nav { display:flex; gap:5px; flex-wrap:wrap; background:var(--card); padding:7px; border-radius:10px; margin-bottom:12px; position:sticky; top:0; z-index:100; }
+        .ntab { flex:1; min-width:52px; padding:9px 4px; background:var(--border); color:var(--text); border:none; border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; text-align:center; }
+        .ntab.on { background:var(--orange); color:#000; }
+        .ntab.log-on { background:var(--blue); color:#fff; }
+
+        /* ── SECTIONS ── */
+        .sec { display:none; } .sec.on { display:block; }
+        .sec-title { font-size:var(--fs-lg); font-weight:800; color:var(--orange); margin-bottom:10px; }
+        .sec-title.green { color:var(--green); }
+        .sec-title.blue { color:var(--blue); }
+
+        /* ── INFO BOXES ── */
+        .info-box { background:var(--card); border-left:4px solid var(--orange); padding:12px 14px; border-radius:8px; margin-bottom:12px; }
+        .info-box.green { border-left-color:var(--green); }
+        .info-box.red { background:#1a0808; border-left-color:var(--red); }
+        .info-box.blue { border-left-color:var(--blue); }
+        .ib-title { font-size:var(--fs-sm); font-weight:700; margin-bottom:6px; color:var(--orange); }
+        .info-box.green .ib-title { color:var(--green); }
+        .info-box.red .ib-title { color:#e74c3c; }
+        .info-box.blue .ib-title { color:var(--blue); }
+        .ib-body { font-size:var(--fs-sm); color:var(--subtle); line-height:1.55; }
+        .ib-body ul { padding-left:16px; }
+        .ib-body li { margin-bottom:3px; }
+
+        /* ── EXERCISE CARD ── */
+        .ex-card { background:var(--card); border-left:4px solid var(--orange); padding:14px; border-radius:8px; margin-bottom:10px; }
+        .ex-card.mob { border-left-color:var(--green); }
+        .ex-row1 { display:flex; align-items:flex-start; gap:8px; margin-bottom:6px; }
+        .ex-num { background:var(--orange); color:#000; font-size:11px; font-weight:800; padding:3px 8px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:3px; }
+        .ex-card.mob .ex-num { background:var(--green); }
+        .ex-name { font-size:var(--fs-xl); font-weight:800; line-height:1.15; flex:1; }
+        .back-badge { background:var(--red); color:#fff; font-size:10px; font-weight:800; padding:3px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:4px; }
+        .ex-sets { font-size:var(--fs-lg); font-weight:700; color:var(--orange); margin-bottom:4px; }
+        .ex-card.mob .ex-sets { color:var(--green); }
+        .ex-last { font-size:var(--fs-sm); color:var(--muted); margin-bottom:8px; font-style:italic; }
+        .ex-cue { font-size:var(--fs-sm); color:var(--subtle); line-height:1.5; padding-top:8px; border-top:1px solid var(--border); }
+        .ex-rest { font-size:var(--fs-sm); color:var(--muted); margin-top:5px; }
+        .mob-feel { font-size:var(--fs-sm); color:var(--green); margin-top:6px; }
+        .mob-stop { font-size:var(--fs-sm); color:#e74c3c; margin-top:3px; }
+
+        /* ── ACTION BUTTONS (Video + Log) ── */
+        .ex-actions { display:flex; gap:6px; margin-top:10px; }
+        .act-btn { flex:1; padding:8px 6px; border:none; border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; text-align:center; text-decoration:none; display:block; }
+        .act-btn.vid { background:#1a0a0a; color:#ff6b6b; border:1px solid #400; }
+        .act-btn.vid:hover { background:#2a1010; }
+        .act-btn.log-btn { background:#0a1020; color:var(--blue); border:1px solid #0984e3; }
+        .act-btn.log-btn.active { background:var(--blue); color:#fff; }
+
+        /* ── INLINE LOG PANEL ── */
+        .log-panel { display:none; margin-top:10px; background:#0d1520; border:1px solid #0984e3; border-radius:8px; padding:12px; }
+        .log-panel.open { display:block; }
+        .log-panel-title { font-size:var(--fs-sm); font-weight:700; color:var(--blue); margin-bottom:10px; }
+        .log-sets { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+        .log-set-row { display:flex; align-items:center; gap:8px; }
+        .log-set-label { font-size:var(--fs-sm); color:var(--subtle); width:42px; flex-shrink:0; }
+        .log-input { background:#1a2535; border:1px solid #333; color:var(--text); border-radius:6px; padding:7px 10px; font-size:var(--fs-sm); width:90px; text-align:center; }
+        .log-input:focus { outline:none; border-color:var(--blue); }
+        .log-x { font-size:var(--fs-sm); color:var(--muted); }
+        .log-save-btn { width:100%; padding:9px; background:var(--blue); color:#fff; border:none; border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; }
+        .log-save-btn:active { opacity:.8; }
+        .log-saved-msg { font-size:var(--fs-sm); color:var(--green); text-align:center; margin-top:6px; display:none; }
+
+        /* ── REST CARD ── */
+        .rest-card { background:var(--card); border-left:4px solid var(--green); padding:22px; border-radius:8px; text-align:center; }
+        .rest-title { font-size:var(--fs-xxl); font-weight:800; color:var(--green); margin-bottom:12px; }
+        .rest-line { font-size:var(--fs); color:var(--subtle); margin-bottom:8px; line-height:1.6; }
+
+        /* ── SCHEDULE ── */
+        .sched-row { background:var(--card); padding:13px 15px; border-radius:8px; border-left:4px solid var(--orange); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+        .sched-row.soft { border-left-color:var(--green); }
+        .sched-day { font-size:var(--fs-sm); font-weight:800; flex-shrink:0; }
+        .sched-what { font-size:var(--fs-sm); color:var(--subtle); }
+
+        /* ── HISTORY ── */
+        .hist-empty { text-align:center; color:var(--muted); padding:40px 20px; font-size:var(--fs-sm); }
+        .hist-session { background:var(--card); border-radius:8px; padding:14px; margin-bottom:12px; }
+        .hist-date { font-size:var(--fs-sm); font-weight:700; color:var(--blue); margin-bottom:8px; }
+        .hist-day-label { font-size:var(--fs-sm); color:var(--orange); margin-bottom:8px; }
+        .hist-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--border); font-size:var(--fs-sm); color:var(--subtle); }
+        .hist-row:last-child { border-bottom:none; }
+        .hist-ex-name { color:var(--text); }
+        .hist-sets { color:var(--blue); font-weight:700; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <div class="hdr">
+        <button class="tv-btn" onclick="toggleTV()" id="tvBtn">📺 TV</button>
+        <div class="hdr-date" id="hdrDate"></div>
+        <div class="hdr-title" id="hdrTitle"></div>
+        <div class="hdr-sub" id="hdrSub"></div>
+    </div>
+
+    <div class="wbar">
+        <div class="wbar-top">
+            <div class="wbar-label" id="wbarLabel">Week 1 of 4</div>
+            <div class="wbtns" id="wbtns"></div>
+        </div>
+        <div class="pbar"><div class="pfill" id="pfill"></div></div>
+    </div>
+
+    <div class="nav" id="nav">
+        <button class="ntab on"  onclick="show('today')">Today</button>
+        <button class="ntab"     onclick="show('stretch')">Stretch</button>
+        <button class="ntab"     onclick="show('day1')">Day 1</button>
+        <button class="ntab"     onclick="show('day2')">Day 2</button>
+        <button class="ntab"     onclick="show('day3')">Day 3</button>
+        <button class="ntab"     onclick="show('week')">Week</button>
+        <button class="ntab"     onclick="show('hist')">📋 Log</button>
+    </div>
+
+    <div class="sec on" id="sec-today"><div id="today-body"></div></div>
+    <div class="sec"    id="sec-stretch">
+        <div class="sec-title green">Daily Mobility — 7 min</div>
+        <div class="info-box green"><div class="ib-title">Every morning or pre-workout · Same sequence daily · Memorize it</div>
+            <div class="ib-body">Decompress your L2-L3, open tight hips, prep shoulders. Do this before any training day.</div></div>
+        <div class="info-box red"><div class="ib-title">⚠️ Back Safety</div><div class="ib-body"><ul>
+            <li>Work to the edge of comfort — never into pain</li>
+            <li>Back twinges = reduce range, slow down</li>
+            <li>Controlled movement only — no bouncing</li>
+        </ul></div></div>
+        <div id="mob-body"></div>
+    </div>
+    <div class="sec" id="sec-day1">
+        <div class="sec-title">Day 1 — Lower Body</div>
+        <div class="info-box red"><div class="ib-title">⚠️ Lower Back Protocol</div><div class="ib-body"><ul>
+            <li>Neutral spine on ALL exercises — no rounding under load</li>
+            <li>Stop if lower back twinges — form before weight</li>
+            <li>Leave 2–3 reps in the tank every set</li>
+        </ul></div></div>
+        <div id="d1-body"></div>
+    </div>
+    <div class="sec" id="sec-day2">
+        <div class="sec-title">Day 2 — Upper Push &amp; Pull</div>
+        <div id="d2-body"></div>
+    </div>
+    <div class="sec" id="sec-day3">
+        <div class="sec-title">Day 3 — KB HIIT Circuit</div>
+        <div class="info-box"><div class="ib-title">Circuit Format</div>
+            <div class="ib-body">4 rounds · 30s work / 15s rest per exercise · 60s rest between rounds · ~20 min total</div></div>
+        <div id="d3-body"></div>
+    </div>
+    <div class="sec" id="sec-week">
+        <div class="sec-title">Weekly Schedule</div>
+        <div id="week-body"></div>
+    </div>
+    <div class="sec" id="sec-hist">
+        <div class="sec-title blue">📋 Workout Log</div>
+        <div id="hist-body"></div>
+    </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+
+const VID = {
+    goblet_squat:           'https://www.youtube.com/results?search_query=goblet+squat+form+tutorial+beginners',
+    romanian_deadlift:      'https://www.youtube.com/results?search_query=alan+thrall+romanian+deadlift+form',
+    bulgarian_split_squat:  'https://www.youtube.com/results?search_query=athlean-x+bulgarian+split+squat+how+to',
+    glute_bridge:           'https://www.youtube.com/results?search_query=bret+contreras+barbell+hip+thrust+tutorial',
+    dead_bug:               'https://www.youtube.com/results?search_query=dead+bug+exercise+lower+back+core+tutorial',
+    bench_press:            'https://www.youtube.com/results?search_query=alan+thrall+how+to+bench+press',
+    overhead_press:         'https://www.youtube.com/results?search_query=dumbbell+overhead+press+proper+form+tutorial',
+    dumbbell_row:           'https://www.youtube.com/results?search_query=dumbbell+row+proper+form+back+tutorial',
+    trx_row:                'https://www.youtube.com/results?search_query=trx+row+form+back+exercise+tutorial',
+    plank:                  'https://www.youtube.com/results?search_query=perfect+plank+form+core+stability+tutorial',
+    kb_swing:               'https://www.youtube.com/results?search_query=kettlebell+swing+hip+hinge+form+tutorial+beginners',
+    kb_goblet_squat:        'https://www.youtube.com/results?search_query=kettlebell+goblet+squat+tutorial+form',
+    kb_rdl:                 'https://www.youtube.com/results?search_query=kettlebell+romanian+deadlift+form+tutorial',
+    kb_push_press:          'https://www.youtube.com/results?search_query=kettlebell+push+press+how+to+tutorial',
+    farmer_carry:           'https://www.youtube.com/results?search_query=farmer+carry+loaded+carry+core+tutorial'
+};
+
+const MOBILITY = [
+    { name:'90/90 Hip Rotations', dose:'5 reps per side',
+      setup:'Sit on floor, both knees at 90°, one shin forward and one out to the side.',
+      move:'Rotate hips to switch sides — front leg becomes back. Control the rotation.',
+      cue:'Undoes the compression from sitting. Let gravity help, don\'t force.',
+      feel:'Hip socket opening, glutes stretching', stop:'Sharp hip joint pain → reduce range' },
+    { name:'Cat-Cow', dose:'10 slow reps',
+      setup:'Hands and knees, wrists under shoulders, knees under hips.',
+      move:'Inhale: drop belly, lift chest and tailbone (cow). Exhale: round spine up (cat). Deliberate and slow.',
+      cue:'This directly decompresses your L2-L3 discs. Slower = better.',
+      feel:'Gentle movement through every vertebra', stop:'Sharp lower back pain → reduce range of motion' },
+    { name:'Child\'s Pose with Lateral Reach', dose:'30 sec each side',
+      setup:'Kneel, sit back toward heels, both arms extended forward on floor.',
+      move:'Walk both hands right — hold 30s. Center, then walk left — hold 30s.',
+      cue:'Let lower back lengthen and decompress. Breathe into the stretch.',
+      feel:'Lower back releasing, lats and side stretching', stop:'Knee pain → fold a towel under knees' },
+    { name:'Hip Flexor Stretch (Kneeling)', dose:'30–45 sec per side',
+      setup:'Half-kneeling: one foot forward, back knee on mat, hands on front knee.',
+      move:'Shift hips slightly forward, torso upright. Feel stretch in front of back hip.',
+      cue:'Counteracts all-day sitting compression on your hip flexors. Non-negotiable.',
+      feel:'Front of back hip/thigh stretching', stop:'Back knee pain → place a folded towel under it' },
+    { name:'Thread the Needle (Thoracic Rotation)', dose:'8 reps per side',
+      setup:'On hands and knees, one hand behind head.',
+      move:'Rotate elbow under and across (thread), then open up toward the ceiling. Follow with your eyes.',
+      cue:'Thoracic mobility protects your lower back — when the upper spine rotates, the lower spine doesn\'t have to.',
+      feel:'Mid-upper back rotating and opening', stop:'Keep lower back still — all movement is upper back only' },
+    { name:'World\'s Greatest Stretch', dose:'3 reps per side',
+      setup:'Lunge position: one foot forward between hands, back leg extended.',
+      move:'1) Drop back knee, open front hip. 2) Rotate same-side arm to ceiling. 3) Reach forward arm to straighten front leg (hamstring). Return and switch.',
+      cue:'Hip flexor + thoracic rotation + hamstring in one move. Scott\'s most efficient mobility exercise.',
+      feel:'Hip flexor, glutes, hamstring, mid-back — all at once', stop:'Back rounds on hamstring reach → reduce range' },
+    { name:'Band Pull-Aparts (or Arm Circles)', dose:'15 reps or 15 circles each direction',
+      setup:'Stand tall, hold band at shoulder height in front (or arms extended).',
+      move:'Pull band apart to full width, squeeze shoulder blades. Return controlled. No band: large arm circles.',
+      cue:'Wakes up rear delts and rotator cuff before pressing. 45 seconds well spent.',
+      feel:'Rear shoulders and upper back activating', stop:'Shoulder joint pain → switch to arm circles' },
+    { name:'Dead Bug (Activation)', dose:'5 slow reps per side',
+      setup:'Flat on back, arms to ceiling, knees bent at 90° lifted (tabletop).',
+      move:'Slowly lower opposite arm and leg toward floor — stop just before lower back lifts. Return and switch.',
+      cue:'Core warmup AND a disc-protection exercise. Lower back FLAT on floor the entire time.',
+      feel:'Deep core activating — not lower back muscles', stop:'Back arches off floor → make the range smaller' }
+];
+
+const D1 = [
+    { id:'goblet_squat', n:1, name:'Goblet Squat (KB)', sets:4, reps:8,
+      w:{w1:25,w2:30,w3:35,w4:25}, rest:90, back:true,
+      cue:'KB at sternum, chest tall, knees track over toes, sink deep. The counterbalance keeps your torso upright and spine neutral — use it.' },
+    { id:'romanian_deadlift', n:2, name:'Romanian Deadlift (Barbell)', sets:3, reps:8,
+      w:{w1:65,w2:70,w3:75,w4:65}, rest:90, back:true,
+      cue:'Soft knee bend, push hips BACK toward the wall behind you. Bar stays dragging on shins. Stop when hamstrings pull — do NOT go to the floor. This protects your L2-L3.' },
+    { id:'bulgarian_split_squat', n:3, name:'Bulgarian Split Squat', sets:3, reps:8,
+      w:{w1:20,w2:25,w3:30,w4:20}, rest:60, back:false,
+      cue:'Front foot flat, back foot on bench. Weight in front heel. Torso upright. If balance is rough in Week 1 — no shame swapping to Reverse Lunge until it clicks.' },
+    { id:'glute_bridge', n:4, name:'Barbell Glute Bridge', sets:3, reps:10,
+      w:{w1:95,w2:100,w3:105,w4:95}, rest:60, back:true,
+      cue:'Use a barbell pad on your hips. Drive through heels, hard glute squeeze at top. This is ALL glutes — if lower back is working, you\'re doing it wrong.' },
+    { id:'dead_bug', n:5, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
+      w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
+      cue:'Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. Slow is effective.' }
+];
+
+const D2 = [
+    { id:'bench_press', n:1, name:'Barbell Bench Press', sets:4, reps:6,
+      w:{w1:135,w2:140,w3:145,w4:135}, rest:120, back:false,
+      cue:'Shoulders pinched back and down. Lower bar to mid-chest. Elbows ~45° from torso. Controlled descent — no bouncing off chest. You\'re already strong here; own the form.' },
+    { id:'overhead_press', n:2, name:'DB Overhead Press', sets:3, reps:8,
+      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:90, back:false,
+      cue:'Press straight up, core braced, no lower back arch. Elbows slightly forward at start. Can be seated or standing — seated removes the balance demand.' },
+    { id:'dumbbell_row', n:3, name:'Dumbbell Row', sets:3, reps:8,
+      w:{w1:30,w2:35,w3:40,w4:30}, rest:75, back:false,
+      cue:'Brace on bench or hinge standing. Pull elbow straight back and up. Squeeze shoulder blade at top. No rotation — core stays locked.' },
+    { id:'trx_row', n:4, name:'TRX Row  (or Lat Pulldown)', sets:3, reps:8,
+      w:{w1:'BW',w2:'BW',w3:'BW',w4:'BW'}, rest:75, back:false,
+      cue:'TRX: lean back, body straight, pull chest to handles — full scapular squeeze. Planet Fitness: lat pulldown, elbows pulled down to sides, stop at chest level.' },
+    { id:'plank', n:5, name:'Plank Hold', sets:2, reps:'40 sec',
+      w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
+      cue:'Forearms on floor. Hips level — not sagging, not piked. Glutes on. Breathe. Progress to 60s when 40s is easy.' }
+];
+
+const D3 = [
+    { id:'kb_swing', n:1, name:'KB Swing', work:30, rest:15,
+      w:{w1:25,w2:30,w3:35,w4:25}, back:true,
+      cue:'Explosive hip hinge. Bell floats to shoulder height — not overhead. Snap hips, squeeze glutes hard at top. Neutral spine the whole way.' },
+    { id:'kb_goblet_squat', n:2, name:'KB Goblet Squat', work:30, rest:15,
+      w:{w1:25,w2:30,w3:35,w4:25}, back:true,
+      cue:'Same pattern as Day 1 — KB at chest, knees out, full depth. Pace yourself in the circuit. Form over speed.' },
+    { id:'kb_rdl', n:3, name:'KB Romanian Deadlift', work:30, rest:15,
+      w:{w1:25,w2:30,w3:35,w4:25}, back:true,
+      cue:'Hinge back, feel the hamstring — same movement as Day 1 RDL. Neutral spine. Don\'t rush reps in the circuit.' },
+    { id:'kb_push_press', n:4, name:'KB Push Press', work:30, rest:15,
+      w:{w1:25,w2:30,w3:35,w4:25}, back:false,
+      cue:'Slight dip at knees, use leg drive to launch the press. Lockout overhead, lower with control. Alternate sides or both arms.' },
+    { id:'kb_swing', n:5, name:'Renegade Row', work:30, rest:15,
+      w:{w1:20,w2:25,w3:25,w4:20}, back:true,
+      cue:'Plank on two KBs, row one to hip while the other arm stabilizes. Hips stay LEVEL — zero rotation. The anti-rotation IS the exercise.' },
+    { id:'farmer_carry', n:6, name:'Farmer Carry', work:30, rest:15,
+      w:{w1:30,w2:35,w3:40,w4:30}, back:false,
+      cue:'Walk the garage and back with KBs at sides. Tall posture, level shoulders, core braced. Simple and brutal. Grip strength + core endurance.' }
+];
+
+const SCHED = [
+    {day:'Monday',    label:'Day 1 — Lower Body',            soft:false},
+    {day:'Tuesday',   label:'Zone 2 Cardio — 30 min Peloton/Rogue', soft:true},
+    {day:'Wednesday', label:'Day 2 — Upper Push & Pull',     soft:false},
+    {day:'Thursday',  label:'Zone 2 Cardio or Rest',         soft:true},
+    {day:'Friday',    label:'Day 3 — KB HIIT Circuit',       soft:false},
+    {day:'Saturday',  label:'Active Recovery / Walk / Hike', soft:true},
+    {day:'Sunday',    label:'Full Rest',                     soft:true}
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+
+let week = 1, tvMode = false;
+const TABS = ['today','stretch','day1','day2','day3','week','hist'];
+const LOG_PREFIX = 'scott_trainer_log_';
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+
+function wt(w) {
+    const v = w[`w${week}`] ?? w.w1;
+    if (v === 0) return 'Bodyweight';
+    if (typeof v === 'string') return v;
+    return v + ' lbs';
+}
+
+function todayKey() {
+    const d = new Date().getDay();
+    if (d===1) return 'day1'; if (d===3) return 'day2'; if (d===5) return 'day3';
+    return 'rest';
+}
+
+function todayName() {
+    const k = todayKey();
+    return {day1:'Day 1 — Lower Body', day2:'Day 2 — Upper Push & Pull', day3:'Day 3 — KB HIIT', rest:'Rest / Zone 2 Day'}[k];
+}
+
+function dateStr(d) {
+    return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+function todayLogKey(dayKey) {
+    const d = new Date();
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    return `${LOG_PREFIX}${ds}_${dayKey}`;
+}
+
+function getLog(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || {}; } catch { return {}; }
+}
+
+function saveLog(key, data) {
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
+}
+
+function getLastSession(dayKey) {
+    // Find most recent log for this day type (excluding today)
+    try {
+        const today = new Date().toISOString().slice(0,10);
+        const keys = Object.keys(localStorage).filter(k => k.startsWith(LOG_PREFIX) && k.includes('_'+dayKey) && !k.includes(today));
+        if (!keys.length) return null;
+        keys.sort().reverse();
+        return JSON.parse(localStorage.getItem(keys[0]));
+    } catch { return null; }
+}
+
+// ══════════════════════════════════════════════
+//  RENDERERS
+// ══════════════════════════════════════════════
+
+function renderHeader() {
+    const d = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    document.getElementById('hdrDate').textContent = `${days[d.getDay()]}, ${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+    document.getElementById('hdrTitle').textContent = todayName();
+    const k = todayKey();
+    document.getElementById('hdrSub').textContent = k==='rest'
+        ? 'Active recovery + mobility work'
+        : `Week ${week} · ${k==='day3'?'20':'40'} min`;
+}
+
+function renderWeekBtns() {
+    document.getElementById('wbtns').innerHTML = [1,2,3,4].map(i =>
+        `<button class="wbtn ${i===week?'on':''}" onclick="setWeek(${i})">W${i}${i===4?'🔽':''}</button>`
+    ).join('');
+    document.getElementById('pfill').style.width = (week/4*100)+'%';
+    document.getElementById('wbarLabel').textContent = `Week ${week} of 4${week===4?' — Deload':''}`;
+}
+
+function logPanel(ex, dayKey, isCircuit) {
+    const setCount = isCircuit ? 4 : (ex.sets || 2);
+    const rows = Array.from({length:setCount}, (_,i) => `
+        <div class="log-set-row">
+            <span class="log-set-label">Set ${i+1}</span>
+            <input class="log-input" type="number" id="lw-${ex.id||ex.name}-${i}" placeholder="lbs" inputmode="decimal">
+            <span class="log-x">×</span>
+            <input class="log-input" type="number" id="lr-${ex.id||ex.name}-${i}" placeholder="reps" inputmode="numeric">
+        </div>`).join('');
+
+    return `
+        <div class="log-panel" id="lp-${ex.id||ex.name}">
+            <div class="log-panel-title">📋 Log Your Sets</div>
+            <div class="log-sets">${rows}</div>
+            <button class="log-save-btn" onclick="saveExercise('${ex.id||ex.name}','${dayKey}',${setCount})">Save Sets</button>
+            <div class="log-saved-msg" id="lsaved-${ex.id||ex.name}">✅ Saved!</div>
+        </div>`;
+}
+
+function lastSessionLine(ex, dayKey) {
+    const last = getLastSession(dayKey);
+    if (!last || !last[ex.id||ex.name]) return '';
+    const sets = last[ex.id||ex.name];
+    const parts = sets.filter(s=>s.w||s.r).map(s=>`${s.w||'?'}lbs×${s.r||'?'}`);
+    if (!parts.length) return '';
+    return `<div class="ex-last">Last: ${parts.join(' · ')}</div>`;
+}
+
+function exCard(ex, dayKey, isCircuit=false) {
+    const setsStr = isCircuit
+        ? `${ex.work}s work / ${ex.rest}s rest  ·  ${wt(ex.w)}`
+        : `${ex.sets} × ${ex.reps}  @  ${wt(ex.w)}`;
+    const restStr = !isCircuit && ex.rest ? `<div class="ex-rest">Rest: ${ex.rest}s</div>` : '';
+    const badge = ex.back ? `<span class="back-badge">BACK ⚠️</span>` : '';
+    const vid = VID[ex.id] ? `<a class="act-btn vid" href="${VID[ex.id]}" target="_blank">📹 Form Video</a>` : '';
+    const last = lastSessionLine(ex, dayKey);
+    return `
+    <div class="ex-card" id="ec-${ex.id||ex.name}">
+        <div class="ex-row1">
+            <span class="ex-num">${ex.n}</span>
+            <span class="ex-name">${ex.name}</span>
+            ${badge}
+        </div>
+        <div class="ex-sets">${setsStr}</div>
+        ${last}
+        <div class="ex-cue">${ex.cue}</div>
+        ${restStr}
+        <div class="ex-actions">
+            ${vid}
+            <button class="act-btn log-btn" onclick="toggleLog('${ex.id||ex.name}', this)">✏️ Log Sets</button>
+        </div>
+        ${logPanel(ex, dayKey, isCircuit)}
+    </div>`;
+}
+
+function mobCard(m, i) {
+    return `
+    <div class="ex-card mob">
+        <div class="ex-row1">
+            <span class="ex-num">${i+1}</span>
+            <span class="ex-name">${m.name}</span>
+        </div>
+        <div class="ex-sets">${m.dose}</div>
+        <div class="ex-cue">
+            <strong>Setup:</strong> ${m.setup}<br><br>
+            <strong>Move:</strong> ${m.move}<br><br>
+            <em>${m.cue}</em>
+        </div>
+        <div class="mob-feel">✓ Feel: ${m.feel}</div>
+        <div class="mob-stop">✗ Stop if: ${m.stop}</div>
+    </div>`;
+}
+
+function restCard() {
+    return `<div class="rest-card">
+        <div class="rest-title">Rest / Recovery</div>
+        <div class="rest-line">💚 Do your mobility routine (Stretch tab)</div>
+        <div class="rest-line">🚴 Optional: 30 min Zone 2 · target 110–130 bpm</div>
+        <div class="rest-line">🚶 Or walk the neighborhood — counts!</div>
+        <div class="rest-line" style="color:var(--muted);font-size:var(--fs-sm);margin-top:12px">Zone 2 = can hold a full conversation while moving</div>
+    </div>`;
+}
+
+function renderToday() {
+    const k = todayKey();
+    let html = '';
+    if (k === 'rest') { html = restCard(); }
+    else if (k === 'day1') {
+        html += `<div class="info-box red"><div class="ib-title">⚠️ Lower Back Protocol</div><div class="ib-body"><ul>
+            <li>Neutral spine on ALL exercises — no rounding</li><li>Stop if back twinges — form before weight</li><li>Leave 2–3 reps in the tank</li></ul></div></div>`;
+        D1.forEach(ex => { html += exCard(ex, 'day1'); });
+    } else if (k === 'day2') {
+        D2.forEach(ex => { html += exCard(ex, 'day2'); });
+    } else if (k === 'day3') {
+        html += `<div class="info-box"><div class="ib-title">Circuit</div><div class="ib-body">4 rounds · 30s work / 15s rest · 60s between rounds · ~20 min</div></div>`;
+        D3.forEach(ex => { html += exCard(ex, 'day3', true); });
+    }
+    document.getElementById('today-body').innerHTML = html;
+}
+
+function renderDay(exArr, dayKey, containerId, isCircuit=false) {
+    document.getElementById(containerId).innerHTML = exArr.map(ex => exCard(ex, dayKey, isCircuit)).join('');
+}
+
+function renderMobility() {
+    document.getElementById('mob-body').innerHTML = MOBILITY.map((m,i) => mobCard(m,i)).join('');
+}
+
+function renderSchedule() {
+    document.getElementById('week-body').innerHTML = SCHED.map(s =>
+        `<div class="sched-row ${s.soft?'soft':''}"><span class="sched-day">${s.day}</span><span class="sched-what">${s.label}</span></div>`
+    ).join('');
+}
+
+function renderHistory() {
+    try {
+        const keys = Object.keys(localStorage).filter(k => k.startsWith(LOG_PREFIX));
+        if (!keys.length) {
+            document.getElementById('hist-body').innerHTML = `<div class="hist-empty">No sessions logged yet.<br><br>Tap ✏️ Log Sets on any exercise to start tracking.</div>`;
+            return;
+        }
+        keys.sort().reverse();
+        const dayNames = {day1:'Day 1 — Lower Body', day2:'Day 2 — Upper Push & Pull', day3:'Day 3 — KB HIIT'};
+        let html = '';
+        for (const key of keys.slice(0,20)) {
+            const parts = key.replace(LOG_PREFIX,'').split('_');
+            const datepart = parts[0];
+            const daypart = parts[1];
+            const data = getLog(key);
+            const exNames = Object.keys(data);
+            if (!exNames.length) continue;
+            const d = new Date(datepart+'T12:00:00');
+            let rows = exNames.map(name => {
+                const sets = data[name];
+                const str = sets.filter(s=>s.w||s.r).map(s=>`${s.w||'?'}×${s.r||'?'}`).join(' ');
+                return `<div class="hist-row"><span class="hist-ex-name">${name}</span><span class="hist-sets">${str}</span></div>`;
+            }).join('');
+            html += `<div class="hist-session">
+                <div class="hist-date">${dateStr(d)}</div>
+                <div class="hist-day-label">${dayNames[daypart]||daypart}</div>
+                ${rows}
+            </div>`;
+        }
+        document.getElementById('hist-body').innerHTML = html || `<div class="hist-empty">No complete sessions yet.</div>`;
+    } catch(e) {
+        document.getElementById('hist-body').innerHTML = `<div class="hist-empty">Log unavailable in this browser.</div>`;
+    }
+}
+
+// ══════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════
+
+function setWeek(w) {
+    week = w;
+    renderWeekBtns();
+    renderHeader();
+    renderToday();
+    renderDay(D1,'day1','d1-body');
+    renderDay(D2,'day2','d2-body');
+    renderDay(D3,'day3','d3-body',true);
+}
+
+function show(tab) {
+    TABS.forEach(t => document.getElementById('sec-'+t).classList.toggle('on', t===tab));
+    document.querySelectorAll('.ntab').forEach((b,i) => b.classList.toggle('on', TABS[i]===tab));
+    if (tab==='hist') renderHistory();
+    window.scrollTo(0,0);
+}
+
+function toggleLog(exId, btn) {
+    const panel = document.getElementById('lp-'+exId);
+    if (!panel) return;
+    const open = panel.classList.toggle('open');
+    btn.classList.toggle('active', open);
+    btn.textContent = open ? '✕ Close Log' : '✏️ Log Sets';
+}
+
+function saveExercise(exId, dayKey, setCount) {
+    const logKey = todayLogKey(dayKey);
+    const existing = getLog(logKey);
+    const sets = [];
+    for (let i = 0; i < setCount; i++) {
+        const wEl = document.getElementById(`lw-${exId}-${i}`);
+        const rEl = document.getElementById(`lr-${exId}-${i}`);
+        sets.push({ w: wEl ? wEl.value : '', r: rEl ? rEl.value : '' });
+    }
+    existing[exId] = sets;
+    saveLog(logKey, existing);
+    const msg = document.getElementById(`lsaved-${exId}`);
+    if (msg) { msg.style.display='block'; setTimeout(()=>msg.style.display='none', 2000); }
+}
+
+function toggleTV() {
+    tvMode = !tvMode;
+    document.body.classList.toggle('tv', tvMode);
+    document.getElementById('tvBtn').textContent = tvMode ? '📱 Phone' : '📺 TV';
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderHeader();
+    renderWeekBtns();
+    renderToday();
+    renderMobility();
+    renderDay(D1,'day1','d1-body');
+    renderDay(D2,'day2','d2-body');
+    renderDay(D3,'day3','d3-body',true);
+    renderSchedule();
+});
+</script>
+</body>
+</html>
