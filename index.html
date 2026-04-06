@@ -272,6 +272,8 @@ const VID = {
     dumbbell_row:           'https://www.youtube.com/results?search_query=dumbbell+row+proper+form+back+tutorial',
     trx_row:                'https://www.youtube.com/results?search_query=trx+row+form+back+exercise+tutorial',
     face_pull:              'https://www.youtube.com/results?search_query=face+pull+resistance+band+cable+rear+delt+tutorial',
+    db_curl:                'https://www.youtube.com/results?search_query=dumbbell+curl+proper+form+bicep+tutorial+slow+negative',
+    tri_oh_extension:       'https://www.youtube.com/results?search_query=dumbbell+overhead+tricep+extension+proper+form+tutorial',
     plank:                  'https://www.youtube.com/results?search_query=perfect+plank+form+core+stability+tutorial',
     kb_swing:               'https://www.youtube.com/results?search_query=kettlebell+swing+hip+hinge+form+tutorial+beginners',
     kb_goblet_squat:        'https://www.youtube.com/results?search_query=kettlebell+goblet+squat+tutorial+form',
@@ -379,9 +381,15 @@ const D2 = [
     { id:'face_pull', n:5, name:'Face Pull (Band or Cable)', sets:3, reps:15,
       w:{w1:'Light',w2:'Light',w3:'Medium',w4:'Light'}, rest:45, back:false,
       cue:'Anchor resistance band at face height (door frame or rack post). Pull handles to temples — elbows flare HIGH and wide, above the hands. Pause and squeeze rear delts hard at the end. At PF: use the cable machine with a rope. This exercise protects your rotator cuff long-term and directly counterbalances all the pressing work. Do NOT skip it.' },
-    { id:'plank', n:6, name:'Plank Hold', sets:2, reps:'40 sec',
+    { id:'db_curl', n:6, name:'DB Curl', sets:3, reps:10,
+      w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
+      cue:'Stand or sit, elbows pinned at your sides — they do NOT move. Full range: start with arms straight, curl all the way up to shoulder. Slow the negative: 3 full seconds on the way down. The descent is where growth happens most. Supinate (rotate palm up) as you curl. Do NOT swing your back — if you\'re swinging, drop 5 lbs.' },
+    { id:'tri_oh_extension', n:7, name:'Tricep Overhead Extension (DB)', sets:3, reps:12,
+      w:{w1:25,w2:30,w3:35,w4:25}, rest:45, back:false,
+      cue:'Hold one dumbbell with both hands above your head, elbows pointing forward. Lower it behind your head slowly until you feel a full stretch in the tricep, then press back up. Elbows stay NARROW — do not let them flare out. This hits the long head of the tricep — the biggest portion of the muscle and the one that adds the most visible thickness to your arms. Can be seated or standing.' },
+    { id:'plank', n:8, name:'Plank Hold', sets:2, reps:'40 sec',
       w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
-      cue:'Forearms on floor. Hips level — not sagging, not piked. Glutes on. Breathe. Progress to 60s when 40s is easy. If time is short today, this is the one to skip — the other five are higher priority.' }
+      cue:'Forearms on floor. Hips level — not sagging, not piked. Glutes on. Breathe. Progress to 60s when 40s is easy. If time is short today, this is the one to skip — arms and pressing work are higher priority.' }
 ];
 
 // ── DAY 3 ──
