@@ -137,6 +137,15 @@
         .export-text { width:100%; background:#1a2535; border:1px solid #333; color:var(--text); border-radius:6px; padding:10px; font-size:11px; font-family:monospace; resize:vertical; min-height:180px; display:none; margin-bottom:8px; }
         .copy-btn { width:100%; padding:9px; background:var(--green); color:#000; border:none; border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; display:none; }
 
+        /* ── SESSION NOTES ── */
+        .note-panel { background:var(--card); border-left:4px solid #f9ca24; padding:14px; border-radius:8px; margin-top:16px; margin-bottom:10px; }
+        .note-title { font-size:var(--fs-sm); font-weight:700; color:#f9ca24; margin-bottom:8px; }
+        .note-input { width:100%; background:#1a1500; border:1px solid #555; color:var(--text); border-radius:6px; padding:10px; font-size:var(--fs-sm); resize:vertical; min-height:75px; font-family:inherit; }
+        .note-input:focus { outline:none; border-color:#f9ca24; }
+        .note-save-btn { width:100%; padding:8px; background:#f9ca24; color:#000; border:none; border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; margin-top:8px; }
+        .note-saved-msg { font-size:var(--fs-sm); color:var(--green); text-align:center; margin-top:5px; display:none; }
+        .hist-note { font-size:var(--fs-sm); color:#f9ca24; padding:6px 0 2px; font-style:italic; }
+
         /* ── AD HOC LOG ── */
         .adhoc-panel { background:var(--card); border:1px solid #5cb85c; border-radius:10px; padding:14px; margin-bottom:14px; }
         .adhoc-title { font-size:var(--fs-sm); font-weight:700; color:var(--green); margin-bottom:8px; }
@@ -203,13 +212,15 @@
         <div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div>
             <div class="ib-body">On your first exercise, do 1 warm-up set at ~50–60% of working weight for 8–10 easy reps. Gets joints ready, protects your blood pressure, locks in form before going heavy.</div></div>
         <div id="d1-body"></div>
+        <div id="d1-note"></div>
     </div>
 
     <div class="sec" id="sec-day2">
         <div class="sec-title">Day 2 — Upper Push &amp; Pull</div>
         <div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div>
-            <div class="ib-body">Bench Press: do 1 warm-up set at ~75 lbs for 8 easy reps before your working sets. Gets your shoulders and pecs fully warmed up.</div></div>
+            <div class="ib-body">Bench Press: do 1 warm-up set at ~95 lbs for 8 easy reps before your working sets. Gets your shoulders and pecs fully warmed up.</div></div>
         <div id="d2-body"></div>
+        <div id="d2-note"></div>
     </div>
 
     <div class="sec" id="sec-day3">
@@ -217,6 +228,9 @@
         <div class="info-box"><div class="ib-title">Circuit Format</div>
             <div class="ib-body">4 rounds · 30s work / 15s rest per exercise · 60s rest between rounds · ~20 min total</div></div>
         <div id="d3-body"></div>
+        <div class="sec-title" style="font-size:var(--fs);margin-top:16px;margin-bottom:8px;color:var(--green)">💪 Arm Finisher — After All 4 Rounds</div>
+        <div id="d3-finisher"></div>
+        <div id="d3-note"></div>
     </div>
 
     <div class="sec" id="sec-week">
@@ -269,6 +283,8 @@ const VID = {
     leg_curl:               'https://www.youtube.com/results?search_query=lying+leg+curl+machine+hamstring+form+tutorial',
     bench_press:            'https://www.youtube.com/results?search_query=alan+thrall+how+to+bench+press',
     overhead_press:         'https://www.youtube.com/results?search_query=dumbbell+overhead+press+proper+form+tutorial',
+    shoulder_press:         'https://www.youtube.com/results?search_query=shoulder+press+machine+proper+form+tutorial',
+    band_pushdown:          'https://www.youtube.com/results?search_query=resistance+band+tricep+pushdown+form+tutorial',
     dumbbell_row:           'https://www.youtube.com/results?search_query=dumbbell+row+proper+form+back+tutorial',
     trx_row:                'https://www.youtube.com/results?search_query=trx+row+form+back+exercise+tutorial',
     face_pull:              'https://www.youtube.com/results?search_query=face+pull+resistance+band+cable+rear+delt+tutorial',
@@ -329,14 +345,14 @@ const MOBILITY = [
 // ── DAY 1: HOME VERSION ──
 const D1_HOME = [
     { id:'goblet_squat', n:1, name:'Goblet Squat (KB)', sets:4, reps:8,
-      w:{w1:25,w2:30,w3:35,w4:25}, rest:90, back:true,
+      w:{w1:35,w2:40,w3:45,w4:35}, rest:90, back:true,
       cue:'KB at sternum, chest tall, knees track over toes, sink deep. The counterbalance keeps your torso upright and spine neutral — use it. First exercise: do 1 warm-up set at a lighter weight before your working sets.' },
     { id:'romanian_deadlift', n:2, name:'Romanian Deadlift (Barbell)', sets:3, reps:8,
-      w:{w1:65,w2:70,w3:75,w4:65}, rest:90, back:true,
-      cue:'Soft knee bend, push hips BACK toward the wall behind you. Bar stays dragging on shins. Stop when hamstrings pull — do NOT go to the floor. This protects your L2-L3.' },
+      w:{w1:85,w2:90,w3:95,w4:85}, rest:90, back:true,
+      cue:'Soft knee bend, push hips BACK toward the wall behind you. Bar stays dragging on shins. Stop when hamstrings pull — do NOT go to the floor. This protects your L2-L3. At this weight, double-check you feel it in your hamstrings, not your lower back.' },
     { id:'bulgarian_split_squat', n:3, name:'Bulgarian Split Squat', sets:3, reps:8,
-      w:{w1:20,w2:25,w3:30,w4:20}, rest:60, back:false,
-      cue:'Front foot flat, back foot on bench. Weight in front heel. Torso upright. If balance is rough in Week 1 — no shame holding lighter dumbbells or a wall until it clicks.' },
+      w:{w1:25,w2:30,w3:35,w4:25}, rest:60, back:false,
+      cue:'Front foot flat, back foot on bench. Weight in front heel. Torso upright. You\'ve been at 20 lbs for weeks — time to push. 25 lbs, commit to it. If balance is the issue, hold one heavier DB in the front hand.' },
     { id:'glute_bridge', n:4, name:'Barbell Glute Bridge', sets:3, reps:10,
       w:{w1:95,w2:100,w3:105,w4:95}, rest:60, back:true,
       cue:'Use a barbell pad on your hips. Drive through heels, hard glute squeeze at top. This is ALL glutes — if lower back is working, you\'re doing it wrong.' },
@@ -348,17 +364,17 @@ const D1_HOME = [
 // ── DAY 1: PLANET FITNESS VERSION ──
 const D1_PF = [
     { id:'leg_press', n:1, name:'Leg Press (Machine)', sets:4, reps:10,
-      w:{w1:90,w2:100,w3:110,w4:90}, rest:90, back:true,
-      cue:'Feet shoulder-width, mid-platform. Lower until thighs reach 90° — STOP before hips tuck under (that tuck = lower back loading = L2-L3 risk). Full extension at top, don\'t slam the lockout. Control the descent. Start lighter than you think. First exercise: do 1 warm-up set at 50–60% weight.' },
+      w:{w1:160,w2:170,w3:180,w4:150}, rest:90, back:true,
+      cue:'Feet shoulder-width, mid-platform. Lower until thighs reach 90° — STOP before hips tuck under (that tuck = lower back loading = L2-L3 risk). Full extension at top, don\'t slam the lockout. Control the descent. First exercise: do 1 warm-up set at 110–120 lbs before your working sets.' },
     { id:'romanian_deadlift', n:2, name:'Romanian Deadlift (Barbell)', sets:3, reps:8,
-      w:{w1:65,w2:70,w3:75,w4:65}, rest:90, back:true,
-      cue:'Smith machine or free barbell at PF. Soft knee bend, push hips BACK toward the wall. Stop when hamstrings pull — do NOT round to reach the floor. This protects your L2-L3.' },
+      w:{w1:85,w2:90,w3:95,w4:85}, rest:90, back:true,
+      cue:'Smith machine or free barbell at PF. Soft knee bend, push hips BACK toward the wall. Stop when hamstrings pull — do NOT round to reach the floor. At these weights, actively check: are you feeling it in your hamstrings or your lower back? Hamstrings = correct. Back = stop and reduce weight.' },
     { id:'bulgarian_split_squat', n:3, name:'Bulgarian Split Squat', sets:3, reps:8,
-      w:{w1:20,w2:25,w3:30,w4:20}, rest:60, back:false,
-      cue:'Use DB\'s from PF rack. Front foot flat, back foot on bench. Weight in front heel. Torso upright. Same exercise as home — you\'ve got this.' },
+      w:{w1:25,w2:30,w3:35,w4:25}, rest:60, back:false,
+      cue:'Use DBs from PF rack. Front foot flat, back foot on bench. Weight in front heel. Torso upright. You\'ve been stuck at 20 lbs — bumped to 25. Commit to it. If balance is shaky, hold one 25 lb DB in your front hand instead of two.' },
     { id:'leg_curl', n:4, name:'Leg Curl (Machine)', sets:3, reps:10,
-      w:{w1:40,w2:45,w3:50,w4:40}, rest:60, back:false,
-      cue:'Lying or seated leg curl. Full range — from straight to fully curled. Slow the negative: 2-3 seconds on the way down. No hip movement. Hamstrings do ALL the work. Pairs perfectly with the Leg Press to balance your knee.' },
+      w:{w1:55,w2:60,w3:65,w4:55}, rest:60, back:false,
+      cue:'Lying or seated leg curl. Full range — from straight to fully curled. Slow the negative: 3 seconds on the way down. No hip movement. Hamstrings do ALL the work. You hit 60 lbs last session — that\'s now your target for all 3 sets.' },
     { id:'dead_bug', n:5, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
       w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
       cue:'Find a mat at PF. Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. This is the most important core exercise for your L2-L3.' }
@@ -367,25 +383,25 @@ const D1_PF = [
 // ── DAY 2 ──
 const D2 = [
     { id:'bench_press', n:1, name:'Barbell Bench Press', sets:4, reps:6,
-      w:{w1:135,w2:140,w3:145,w4:135}, rest:120, back:false,
-      cue:'Shoulders pinched back and down. Lower bar to mid-chest. Elbows ~45° from torso. Controlled descent — no bouncing off chest. You\'re already strong here; own the form. Warm-up set: 75 lbs × 8 easy reps first.' },
-    { id:'overhead_press', n:2, name:'DB Overhead Press', sets:3, reps:8,
-      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:90, back:false,
-      cue:'Press straight up, core braced, no lower back arch. Elbows slightly forward at start. Can be seated or standing — seated removes the balance demand and takes pressure off your back.' },
+      w:{w1:145,w2:150,w3:155,w4:140}, rest:120, back:false,
+      cue:'Shoulders pinched back and down. Lower bar to mid-chest. Elbows ~45° from torso. Controlled descent — no bouncing. Warm-up set: 95–100 lbs × 8 easy reps first. Your 135 was too easy — these are your real working weights now.' },
+    { id:'shoulder_press', n:2, name:'Shoulder Press (Machine)', sets:3, reps:8,
+      w:{w1:45,w2:50,w3:55,w4:45}, rest:90, back:false,
+      cue:'Machine is the right call for your back — fixed path, back support, safer on L2-L3. Set seat so handles start at shoulder height. Press up smooth, don\'t slam the lockout. Control the descent. When you\'re ready to try DB overhead press: always seated, neutral grip (palms facing each other), brace your core before every rep, and never arch your lower back to grind a rep — that\'s when discs get loaded wrong.' },
     { id:'dumbbell_row', n:3, name:'Dumbbell Row', sets:3, reps:8,
-      w:{w1:30,w2:35,w3:40,w4:30}, rest:75, back:false,
-      cue:'Brace on bench or hinge standing. Pull elbow straight back and up. Squeeze shoulder blade at top. No rotation — core stays locked.' },
-    { id:'trx_row', n:4, name:'TRX Row  (or Lat Pulldown)', sets:3, reps:8,
-      w:{w1:'BW',w2:'BW',w3:'BW',w4:'BW'}, rest:75, back:false,
-      cue:'TRX at home: lean back, body straight, pull chest to handles — full scapular squeeze. At Planet Fitness: lat pulldown machine, elbows pulled down to sides, stop when bar reaches chest level.' },
+      w:{w1:35,w2:40,w3:45,w4:35}, rest:75, back:false,
+      cue:'Brace on bench or hinge standing. Pull elbow straight back and up. Squeeze shoulder blade hard at the top. No rotation — core stays locked. You were at 30 lbs — bumped up, time to push this one.' },
+    { id:'trx_row', n:4, name:'TRX Row (or Lat Pulldown)', sets:3, reps:8,
+      w:{w1:90,w2:100,w3:110,w4:90}, rest:75, back:false,
+      cue:'At PF on lat pulldown: elbows pulled down and back to sides, bar stops at chest, full squeeze at bottom. You hit 100 lbs — that\'s now your Week 2 target. At home on TRX: lean back to an angle where 8 reps is genuinely hard, full scapular squeeze.' },
     { id:'face_pull', n:5, name:'Face Pull (Band or Cable)', sets:3, reps:15,
-      w:{w1:'Light',w2:'Light',w3:'Medium',w4:'Light'}, rest:45, back:false,
+      w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
       cue:'Anchor resistance band at face height (door frame or rack post). Pull handles to temples — elbows flare HIGH and wide, above the hands. Pause and squeeze rear delts hard at the end. At PF: use the cable machine with a rope. This exercise protects your rotator cuff long-term and directly counterbalances all the pressing work. Do NOT skip it.' },
     { id:'db_curl', n:6, name:'DB Curl', sets:3, reps:10,
-      w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
+      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:45, back:false,
       cue:'Stand or sit, elbows pinned at your sides — they do NOT move. Full range: start with arms straight, curl all the way up to shoulder. Slow the negative: 3 full seconds on the way down. The descent is where growth happens most. Supinate (rotate palm up) as you curl. Do NOT swing your back — if you\'re swinging, drop 5 lbs.' },
     { id:'tri_oh_extension', n:7, name:'Tricep Overhead Extension (DB)', sets:3, reps:12,
-      w:{w1:25,w2:30,w3:35,w4:25}, rest:45, back:false,
+      w:{w1:35,w2:40,w3:45,w4:35}, rest:45, back:false,
       cue:'Hold one dumbbell with both hands above your head, elbows pointing forward. Lower it behind your head slowly until you feel a full stretch in the tricep, then press back up. Elbows stay NARROW — do not let them flare out. This hits the long head of the tricep — the biggest portion of the muscle and the one that adds the most visible thickness to your arms. Can be seated or standing.' },
     { id:'plank', n:8, name:'Plank Hold', sets:2, reps:'40 sec',
       w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
@@ -393,7 +409,7 @@ const D2 = [
 ];
 
 // ── DAY 3 ──
-const D3 = [
+const D3_CIRCUIT = [
     { id:'kb_swing', n:1, name:'KB Swing', work:30, rest:15,
       w:{w1:25,w2:30,w3:35,w4:25}, back:true,
       cue:'Explosive hip hinge. Bell floats to shoulder height — not overhead. Snap hips, squeeze glutes hard at top. Neutral spine the whole way.' },
@@ -412,6 +428,15 @@ const D3 = [
     { id:'farmer_carry', n:6, name:'Farmer Carry', work:30, rest:15,
       w:{w1:30,w2:35,w3:40,w4:30}, back:false,
       cue:'Walk the garage and back with KBs at sides. Tall posture, level shoulders, core braced. Simple and brutal. Grip strength + core endurance in one shot.' }
+];
+
+const D3_FINISHER = [
+    { id:'d3_curl', n:1, name:'DB Curl', sets:2, reps:12,
+      w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
+      cue:'Do these AFTER completing all 4 circuit rounds. 2 sets only, quick and focused. Elbows pinned, full range, 3-second slow negative. This second weekly hit on your biceps is what drives arm growth — don\'t skip it.' },
+    { id:'band_pushdown', n:2, name:'Band Tricep Pushdown', sets:2, reps:15,
+      w:{w1:'Light Band',w2:'Light Band',w3:'Med Band',w4:'Light Band'}, rest:45, back:false,
+      cue:'Loop band over pull-up bar or high rack anchor. Grab both ends, elbows pinned at your sides — they don\'t move. Push straight down, squeeze hard at the bottom, control back up. At PF on Friday: use cable pushdown machine instead. 2 sets, same idea.' }
 ];
 
 const SCHED = [
@@ -435,6 +460,7 @@ try { gym = localStorage.getItem('scott_gym') || 'home'; } catch(e) {}
 const TABS = ['today','stretch','day1','day2','day3','week','hist'];
 const LOG_PREFIX = 'scott_trainer_log_';
 const ADHOC_KEY  = 'scott_adhoc_log';
+const NOTE_PREFIX = 'scott_note_';
 
 // ══════════════════════════════════════════════
 //  HELPERS
@@ -491,6 +517,30 @@ function getLastSession(dayKey) {
 // ══════════════════════════════════════════════
 //  RENDERERS
 // ══════════════════════════════════════════════
+
+function notePanel(dayKey) {
+    const d = new Date();
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const key = `${NOTE_PREFIX}${ds}_${dayKey}`;
+    let existing = '';
+    try { existing = localStorage.getItem(key) || ''; } catch(e) {}
+    return `<div class="note-panel">
+        <div class="note-title">📝 Session Note</div>
+        <textarea class="note-input" id="note-${dayKey}" placeholder="How did it feel? Any PRs? Back ok? Energy level? Anything to remember next time...">${existing}</textarea>
+        <button class="note-save-btn" onclick="saveNote('${dayKey}')">Save Note</button>
+        <div class="note-saved-msg" id="nsaved-${dayKey}">✅ Saved!</div>
+    </div>`;
+}
+
+function saveNote(dayKey) {
+    const d = new Date();
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const key = `${NOTE_PREFIX}${ds}_${dayKey}`;
+    const text = document.getElementById(`note-${dayKey}`)?.value || '';
+    try { localStorage.setItem(key, text); } catch(e) {}
+    const msg = document.getElementById(`nsaved-${dayKey}`);
+    if (msg) { msg.style.display='block'; setTimeout(()=>msg.style.display='none', 2000); }
+}
 
 function gymToggleHTML() {
     return `<div class="gym-toggle">
@@ -616,18 +666,34 @@ function renderToday() {
             <li>Neutral spine on ALL exercises — no rounding</li><li>Stop if back twinges — form before weight</li><li>Leave 2–3 reps in the tank</li></ul></div></div>`;
         html += `<div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div><div class="ib-body">First exercise: 1 easy set at 50–60% weight for 8–10 reps. Gets joints ready, protects your blood pressure.</div></div>`;
         getD1().forEach(ex => { html += exCard(ex, 'day1'); });
+        html += notePanel('day1');
     } else if (k === 'day2') {
-        html += `<div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div><div class="ib-body">Bench Press: 75 lbs × 8 easy reps before your working sets.</div></div>`;
+        html += `<div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div><div class="ib-body">Bench Press: 95 lbs × 8 easy reps before your working sets.</div></div>`;
         D2.forEach(ex => { html += exCard(ex, 'day2'); });
+        html += notePanel('day2');
     } else if (k === 'day3') {
         html += `<div class="info-box"><div class="ib-title">Circuit</div><div class="ib-body">4 rounds · 30s work / 15s rest · 60s between rounds · ~20 min</div></div>`;
-        D3.forEach(ex => { html += exCard(ex, 'day3', true); });
+        D3_CIRCUIT.forEach(ex => { html += exCard(ex, 'day3', true); });
+        html += `<div class="sec-title" style="font-size:var(--fs);margin-top:16px;margin-bottom:8px;color:var(--green)">💪 Arm Finisher — After All 4 Rounds</div>`;
+        D3_FINISHER.forEach(ex => { html += exCard(ex, 'day3fin'); });
+        html += notePanel('day3');
     }
     document.getElementById('today-body').innerHTML = html;
 }
 
 function renderDay(exArr, dayKey, containerId, isCircuit=false) {
     document.getElementById(containerId).innerHTML = exArr.map(ex => exCard(ex, dayKey, isCircuit)).join('');
+}
+
+function renderD3() {
+    document.getElementById('d3-body').innerHTML = D3_CIRCUIT.map(ex => exCard(ex, 'day3', true)).join('');
+    document.getElementById('d3-finisher').innerHTML = D3_FINISHER.map(ex => exCard(ex, 'day3fin')).join('');
+    document.getElementById('d3-note').innerHTML = notePanel('day3');
+}
+
+function renderNotePanel(dayKey, containerId) {
+    const el = document.getElementById(containerId);
+    if (el) el.innerHTML = notePanel(dayKey);
 }
 
 function renderMobility() {
@@ -663,10 +729,15 @@ function renderHistory() {
                 const str = sets.filter(s=>s.w||s.r).map(s=>`${s.w||'?'}×${s.r||'?'}`).join(' ');
                 return `<div class="hist-row"><span class="hist-ex-name">${name}</span><span class="hist-sets">${str}</span></div>`;
             }).join('');
+            const noteKey = `${NOTE_PREFIX}${datepart}_${daypart}`;
+            let noteText = '';
+            try { noteText = localStorage.getItem(noteKey) || ''; } catch(e) {}
+            const noteHtml = noteText ? `<div class="hist-note">📝 ${noteText}</div>` : '';
             html += `<div class="hist-session">
                 <div class="hist-date">${dateStr(d)}</div>
                 <div class="hist-day-label">${dayNames[daypart]||daypart}</div>
                 ${rows}
+                ${noteHtml}
             </div>`;
         }
         document.getElementById('hist-body').innerHTML = html || `<div class="hist-empty">No complete sessions yet.</div>`;
@@ -705,7 +776,7 @@ function setWeek(w) {
     renderToday();
     renderDay(getD1(),'day1','d1-body');
     renderDay(D2,'day2','d2-body');
-    renderDay(D3,'day3','d3-body',true);
+    renderD3();
 }
 
 function setGym(g) {
@@ -725,6 +796,9 @@ function show(tab) {
     TABS.forEach(t => document.getElementById('sec-'+t).classList.toggle('on', t===tab));
     document.querySelectorAll('.ntab').forEach((b,i) => b.classList.toggle('on', TABS[i]===tab));
     if (tab==='hist') { renderHistory(); renderAdhocDate(); }
+    if (tab==='day1') { renderNotePanel('day1','d1-note'); }
+    if (tab==='day2') { renderNotePanel('day2','d2-note'); }
+    if (tab==='day3') { renderD3(); }
     window.scrollTo(0,0);
 }
 
@@ -814,6 +888,10 @@ function generateExport() {
                     const str = sets.filter(s=>s.w||s.r).map((s,i)=>`Set${i+1}: ${s.w||'?'}lbs×${s.r||'?'}`).join(', ');
                     if (str) lines.push(`  ${name}: ${str}`);
                 }
+                try {
+                    const noteVal = localStorage.getItem(`${NOTE_PREFIX}${datepart}_${daypart}`) || '';
+                    if (noteVal) lines.push(`  📝 Note: ${noteVal}`);
+                } catch(e) {}
             }
         } else {
             lines.push('No structured workouts logged yet.');
@@ -870,8 +948,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMobility();
     renderD1GymToggle();
     renderDay(getD1(),'day1','d1-body');
+    renderNotePanel('day1','d1-note');
     renderDay(D2,'day2','d2-body');
-    renderDay(D3,'day3','d3-body',true);
+    renderNotePanel('day2','d2-note');
+    renderD3();
     renderSchedule();
 });
 </script>
