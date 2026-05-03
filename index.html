@@ -55,7 +55,7 @@
         .info-box { background:var(--card); border-left:4px solid var(--orange); padding:12px 14px; border-radius:8px; margin-bottom:12px; }
         .info-box.green { border-left-color:var(--green); }
         .info-box.red { background:#1a0808; border-left-color:var(--red); }
-        .info-box.blue { border-left-color:var(--blue); }
+        .info-box.blue { border-left-color:var(--blue); background:#090d18; }
         .info-box.purple { border-left-color:var(--purple); background:#0f0d1a; }
         .info-box.yellow { border-left-color:#f9ca24; background:#1a1500; }
         .ib-title { font-size:var(--fs-sm); font-weight:700; margin-bottom:6px; color:var(--orange); }
@@ -99,8 +99,10 @@
         .log-sets { display:flex; flex-direction:column; gap:8px; margin-bottom:8px; }
         .log-set-row { display:flex; align-items:center; gap:8px; }
         .log-set-label { font-size:var(--fs-sm); color:var(--subtle); width:52px; flex-shrink:0; }
+        .log-set-label.warmup-lbl { color:#f9ca24; font-size:11px; font-weight:700; }
         .log-input { background:#1a2535; border:1px solid #333; color:var(--text); border-radius:6px; padding:7px 10px; font-size:var(--fs-sm); width:90px; text-align:center; }
         .log-input:focus { outline:none; border-color:var(--blue); }
+        .log-input.warmup-input { background:#1a1800; border-color:#554400; }
         .log-x { font-size:var(--fs-sm); color:var(--muted); }
         .add-set-btn { width:100%; padding:7px; background:transparent; color:var(--blue); border:1px dashed var(--blue); border-radius:6px; font-size:var(--fs-sm); font-weight:700; cursor:pointer; margin-bottom:8px; opacity:.75; }
         .add-set-btn:hover { opacity:1; background:#0a1020; }
@@ -157,6 +159,12 @@
         .adhoc-list { margin-top:10px; }
         .adhoc-entry { font-size:var(--fs-sm); color:var(--subtle); padding:5px 0; border-bottom:1px solid var(--border); }
         .adhoc-entry:last-child { border-bottom:none; }
+
+        /* ── SUB-SECTION DIVIDER ── */
+        .sub-hdr { font-size:var(--fs-sm); font-weight:800; letter-spacing:.05em; text-transform:uppercase; padding:8px 12px; border-radius:6px; margin:16px 0 10px; }
+        .sub-hdr.blue  { background:#0a1525; color:var(--blue);   border-left:3px solid var(--blue); }
+        .sub-hdr.orange{ background:#1a0e00; color:var(--orange); border-left:3px solid var(--orange); }
+        .sub-hdr.green { background:#0a1800; color:var(--green);  border-left:3px solid var(--green); }
     </style>
 </head>
 <body>
@@ -209,26 +217,35 @@
             <li>Stop if lower back twinges — form before weight</li>
             <li>Leave 2–3 reps in the tank every set</li>
         </ul></div></div>
-        <div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div>
-            <div class="ib-body">On your first exercise, do 1 warm-up set at ~50–60% of working weight for 8–10 easy reps. Gets joints ready, protects your blood pressure, locks in form before going heavy.</div></div>
+        <div class="info-box purple"><div class="ib-title">💪 Warmup Sets Auto-Loaded</div>
+            <div class="ib-body">Warmup sets are pre-added to the log for your first compound exercises. Do the warmup row first at the suggested weight (8–10 easy reps), then your working sets.</div></div>
         <div id="d1-body"></div>
         <div id="d1-note"></div>
     </div>
 
     <div class="sec" id="sec-day2">
-        <div class="sec-title">Day 2 — Upper Push &amp; Pull</div>
-        <div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div>
-            <div class="ib-body">Bench Press: do 1 warm-up set at ~95 lbs for 8 easy reps before your working sets. Gets your shoulders and pecs fully warmed up.</div></div>
+        <div class="sec-title">Day 2 — Push (Chest · Shoulders · Triceps)</div>
+        <div class="info-box blue"><div class="ib-title">🏋️ Planet Fitness — Monday or Wednesday</div>
+            <div class="ib-body">Use barbell bench, incline bench, shoulder press machine, and cable machine. You have everything here.</div></div>
+        <div class="info-box purple"><div class="ib-title">💪 Warmup Sets Auto-Loaded</div>
+            <div class="ib-body">Warmup sets are pre-added in the log for Bench Press and Incline Press. Do them first at the suggested weight before your working sets.</div></div>
         <div id="d2-body"></div>
         <div id="d2-note"></div>
     </div>
 
     <div class="sec" id="sec-day3">
-        <div class="sec-title">Day 3 — KB HIIT Circuit</div>
+        <div class="sec-title">Day 3 — Pull + KB HIIT</div>
+        <div class="info-box blue"><div class="ib-title">🏠 Home Gym — Friday Structure</div>
+            <div class="ib-body">Pull work first (TRX Row + DB Row) → KB Circuit 4 rounds → Arm Finisher. Total ~40 min.</div></div>
+        <div class="sub-hdr blue">🔵 Pull Section — Do These First</div>
+        <div class="info-box purple"><div class="ib-title">💪 Warmup Set Auto-Loaded</div>
+            <div class="ib-body">TRX Row has a warmup set pre-loaded. Do a couple easy reps first to warm up your lats and elbows before the working sets.</div></div>
+        <div id="d3-pull"></div>
+        <div class="sub-hdr orange">⚡ KB Circuit · 4 Rounds · 30s Work / 15s Rest</div>
         <div class="info-box"><div class="ib-title">Circuit Format</div>
-            <div class="ib-body">4 rounds · 30s work / 15s rest per exercise · 60s rest between rounds · ~20 min total</div></div>
+            <div class="ib-body">All 6 exercises = 1 round. Do 4 complete rounds. 60s rest between rounds. ~20 min total.</div></div>
         <div id="d3-body"></div>
-        <div class="sec-title" style="font-size:var(--fs);margin-top:16px;margin-bottom:8px;color:var(--green)">💪 Arm Finisher — After All 4 Rounds</div>
+        <div class="sub-hdr green">💪 Arm Finisher — After All 4 Rounds</div>
         <div id="d3-finisher"></div>
         <div id="d3-note"></div>
     </div>
@@ -243,7 +260,7 @@
 
         <div class="export-panel">
             <div class="export-title">📤 Share with Your AI Trainer</div>
-            <div class="export-desc">Export your recent workouts so you can paste them into Claude Chat. Your trainer can then review your progress, spot patterns, and give you personalized feedback.</div>
+            <div class="export-desc">Export your recent workouts so you can paste them into Claude Chat for coaching feedback.</div>
             <button class="export-btn" onclick="generateExport()">Generate Export for Claude</button>
             <textarea class="export-text" id="exportText" readonly></textarea>
             <button class="copy-btn" id="copyBtn" onclick="copyExport()">📋 Copy to Clipboard</button>
@@ -279,24 +296,25 @@ const VID = {
     bulgarian_split_squat:  'https://www.youtube.com/results?search_query=athlean-x+bulgarian+split+squat+how+to',
     glute_bridge:           'https://www.youtube.com/results?search_query=bret+contreras+barbell+hip+thrust+tutorial',
     dead_bug:               'https://www.youtube.com/results?search_query=dead+bug+exercise+lower+back+core+tutorial',
+    calf_raise:             'https://www.youtube.com/results?search_query=standing+calf+raise+full+range+form+tutorial',
     leg_press:              'https://www.youtube.com/results?search_query=leg+press+machine+proper+form+tutorial',
     leg_curl:               'https://www.youtube.com/results?search_query=lying+leg+curl+machine+hamstring+form+tutorial',
     bench_press:            'https://www.youtube.com/results?search_query=alan+thrall+how+to+bench+press',
-    overhead_press:         'https://www.youtube.com/results?search_query=dumbbell+overhead+press+proper+form+tutorial',
+    incline_press:          'https://www.youtube.com/results?search_query=incline+dumbbell+press+proper+form+tutorial',
     shoulder_press:         'https://www.youtube.com/results?search_query=shoulder+press+machine+proper+form+tutorial',
-    band_pushdown:          'https://www.youtube.com/results?search_query=resistance+band+tricep+pushdown+form+tutorial',
-    dumbbell_row:           'https://www.youtube.com/results?search_query=dumbbell+row+proper+form+back+tutorial',
-    trx_row:                'https://www.youtube.com/results?search_query=trx+row+form+back+exercise+tutorial',
     face_pull:              'https://www.youtube.com/results?search_query=face+pull+resistance+band+cable+rear+delt+tutorial',
-    db_curl:                'https://www.youtube.com/results?search_query=dumbbell+curl+proper+form+bicep+tutorial+slow+negative',
     tri_oh_extension:       'https://www.youtube.com/results?search_query=dumbbell+overhead+tricep+extension+proper+form+tutorial',
-    plank:                  'https://www.youtube.com/results?search_query=perfect+plank+form+core+stability+tutorial',
+    cable_pushdown:         'https://www.youtube.com/results?search_query=cable+tricep+pushdown+rope+attachment+form+tutorial',
+    db_curl:                'https://www.youtube.com/results?search_query=dumbbell+curl+proper+form+bicep+tutorial+slow+negative',
+    trx_row:                'https://www.youtube.com/results?search_query=trx+row+form+back+exercise+tutorial',
+    dumbbell_row:           'https://www.youtube.com/results?search_query=dumbbell+row+proper+form+back+tutorial',
     kb_swing:               'https://www.youtube.com/results?search_query=kettlebell+swing+hip+hinge+form+tutorial+beginners',
     kb_goblet_squat:        'https://www.youtube.com/results?search_query=kettlebell+goblet+squat+tutorial+form',
     kb_rdl:                 'https://www.youtube.com/results?search_query=kettlebell+romanian+deadlift+form+tutorial',
     kb_push_press:          'https://www.youtube.com/results?search_query=kettlebell+push+press+how+to+tutorial',
     renegade_row:           'https://www.youtube.com/results?search_query=kettlebell+renegade+row+proper+form+tutorial',
-    farmer_carry:           'https://www.youtube.com/results?search_query=farmer+carry+loaded+carry+core+tutorial'
+    farmer_carry:           'https://www.youtube.com/results?search_query=farmer+carry+loaded+carry+core+tutorial',
+    band_pushdown:          'https://www.youtube.com/results?search_query=resistance+band+tricep+pushdown+form+tutorial'
 };
 
 const MOBILITY = [
@@ -328,7 +346,7 @@ const MOBILITY = [
     { name:'World\'s Greatest Stretch', dose:'3 reps per side',
       setup:'Lunge position: one foot forward between hands, back leg extended.',
       move:'1) Drop back knee, open front hip. 2) Rotate same-side arm to ceiling. 3) Reach forward arm to straighten front leg (hamstring). Return and switch.',
-      cue:'Hip flexor + thoracic rotation + hamstring in one move. Scott\'s most efficient mobility exercise.',
+      cue:'Hip flexor + thoracic rotation + hamstring in one move. Most efficient mobility exercise.',
       feel:'Hip flexor, glutes, hamstring, mid-back — all at once', stop:'Back rounds on hamstring reach → reduce range' },
     { name:'Band Pull-Aparts (or Arm Circles)', dose:'15 reps or 15 circles each direction',
       setup:'Stand tall, hold band at shoulder height in front (or arms extended).',
@@ -345,77 +363,90 @@ const MOBILITY = [
 // ── DAY 1: HOME VERSION ──
 const D1_HOME = [
     { id:'goblet_squat', n:1, name:'Goblet Squat (KB)', sets:4, reps:8,
-      w:{w1:35,w2:40,w3:45,w4:35}, rest:90, back:true,
-      cue:'KB at sternum, chest tall, knees track over toes, sink deep. The counterbalance keeps your torso upright and spine neutral — use it. First exercise: do 1 warm-up set at a lighter weight before your working sets.' },
+      w:{w1:35,w2:40,w3:45,w4:35}, rest:90, back:true, warmup:true,
+      cue:'KB at sternum, chest tall, knees track over toes, sink deep. The counterbalance keeps your torso upright and spine neutral — use it. Warmup set pre-loaded in log.' },
     { id:'romanian_deadlift', n:2, name:'Romanian Deadlift (Barbell)', sets:3, reps:8,
-      w:{w1:85,w2:90,w3:95,w4:85}, rest:90, back:true,
-      cue:'Soft knee bend, push hips BACK toward the wall behind you. Bar stays dragging on shins. Stop when hamstrings pull — do NOT go to the floor. This protects your L2-L3. At this weight, double-check you feel it in your hamstrings, not your lower back.' },
+      w:{w1:75,w2:80,w3:85,w4:75}, rest:90, back:true, warmup:true,
+      cue:'Soft knee bend, push hips BACK toward the wall behind you. Bar stays dragging on shins. Stop when hamstrings pull — do NOT go to the floor. This protects your L2-L3. Feel this in your hamstrings, NOT your lower back. If your back is working hard, reduce weight immediately. Weights kept conservative — build the pattern before adding load.' },
     { id:'bulgarian_split_squat', n:3, name:'Bulgarian Split Squat', sets:3, reps:8,
       w:{w1:25,w2:30,w3:35,w4:25}, rest:60, back:false,
-      cue:'Front foot flat, back foot on bench. Weight in front heel. Torso upright. You\'ve been at 20 lbs for weeks — time to push. 25 lbs, commit to it. If balance is the issue, hold one heavier DB in the front hand.' },
+      cue:'Front foot flat, back foot on bench. Weight in front heel. Torso upright. 25 lbs is the new floor — commit to it. If balance is the issue, hold one heavier DB in the front hand.' },
     { id:'glute_bridge', n:4, name:'Barbell Glute Bridge', sets:3, reps:10,
       w:{w1:95,w2:100,w3:105,w4:95}, rest:60, back:true,
-      cue:'Use a barbell pad on your hips. Drive through heels, hard glute squeeze at top. This is ALL glutes — if lower back is working, you\'re doing it wrong.' },
-    { id:'dead_bug', n:5, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
+      cue:'Use a barbell pad on your hips. Drive through heels, hard glute squeeze at top. This is ALL glutes — if lower back is working, something is wrong. Hips drive up, back stays neutral.' },
+    { id:'calf_raise', n:5, name:'Standing Calf Raise', sets:3, reps:15,
+      w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:false,
+      cue:'Stand on the edge of a plate or step with heels hanging off. Rise up on toes as high as you can — full stretch at the bottom, full contraction at top. Pause 1 second at top. Hold a DB in each hand when bodyweight feels easy. Calves respond to frequency — every leg day.' },
+    { id:'dead_bug', n:6, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
       w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
-      cue:'Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. Slow is effective. This is the most important core exercise for your L2-L3.' }
+      cue:'Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. Slow is effective. Most important core exercise for your L2-L3.' }
 ];
 
 // ── DAY 1: PLANET FITNESS VERSION ──
 const D1_PF = [
     { id:'leg_press', n:1, name:'Leg Press (Machine)', sets:4, reps:10,
-      w:{w1:160,w2:170,w3:180,w4:150}, rest:90, back:true,
-      cue:'Feet shoulder-width, mid-platform. Lower until thighs reach 90° — STOP before hips tuck under (that tuck = lower back loading = L2-L3 risk). Full extension at top, don\'t slam the lockout. Control the descent. First exercise: do 1 warm-up set at 110–120 lbs before your working sets.' },
+      w:{w1:160,w2:170,w3:180,w4:150}, rest:90, back:true, warmup:true,
+      cue:'Feet shoulder-width, mid-platform. Lower until thighs reach 90° — STOP before hips tuck under (that tuck = lower back loading = L2-L3 risk). Full extension at top, don\'t slam the lockout. Warmup set pre-loaded in log.' },
     { id:'romanian_deadlift', n:2, name:'Romanian Deadlift (Barbell)', sets:3, reps:8,
-      w:{w1:85,w2:90,w3:95,w4:85}, rest:90, back:true,
-      cue:'Smith machine or free barbell at PF. Soft knee bend, push hips BACK toward the wall. Stop when hamstrings pull — do NOT round to reach the floor. At these weights, actively check: are you feeling it in your hamstrings or your lower back? Hamstrings = correct. Back = stop and reduce weight.' },
+      w:{w1:75,w2:80,w3:85,w4:75}, rest:90, back:true, warmup:true,
+      cue:'Smith machine or free barbell. Soft knee bend, push hips BACK. Stop when hamstrings pull — do NOT round to reach the floor. Feel this in your hamstrings, NOT your lower back. If back is working hard, reduce weight. Conservative weights on purpose — pattern first.' },
     { id:'bulgarian_split_squat', n:3, name:'Bulgarian Split Squat', sets:3, reps:8,
       w:{w1:25,w2:30,w3:35,w4:25}, rest:60, back:false,
-      cue:'Use DBs from PF rack. Front foot flat, back foot on bench. Weight in front heel. Torso upright. You\'ve been stuck at 20 lbs — bumped to 25. Commit to it. If balance is shaky, hold one 25 lb DB in your front hand instead of two.' },
+      cue:'Use DBs from PF rack. Front foot flat, back foot on bench. Weight in front heel. Torso upright. 25 lbs, commit to it. If balance is shaky, hold one DB in your front hand.' },
     { id:'leg_curl', n:4, name:'Leg Curl (Machine)', sets:3, reps:10,
-      w:{w1:55,w2:60,w3:65,w4:55}, rest:60, back:false,
-      cue:'Lying or seated leg curl. Full range — from straight to fully curled. Slow the negative: 3 seconds on the way down. No hip movement. Hamstrings do ALL the work. You hit 60 lbs last session — that\'s now your target for all 3 sets.' },
-    { id:'dead_bug', n:5, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
+      w:{w1:60,w2:65,w3:70,w4:55}, rest:60, back:false,
+      cue:'Lying or seated leg curl. Full range — from straight to fully curled. Slow the negative: 3 seconds on the way down. No hip movement. Hamstrings do ALL the work.' },
+    { id:'calf_raise', n:5, name:'Calf Raise (Machine)', sets:3, reps:15,
+      w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:false,
+      cue:'Use the seated or standing calf raise machine. Full range — deep stretch at bottom, squeeze at top, 1-second pause. If using standing: shoulders under the pads, not your traps. Full range beats heavy weight every time for calves.' },
+    { id:'dead_bug', n:6, name:'Dead Bug (Core)', sets:2, reps:'10 per side',
       w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
-      cue:'Find a mat at PF. Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. This is the most important core exercise for your L2-L3.' }
+      cue:'Find a mat at PF. Opposite arm and leg extend slowly toward the floor. Lower back stays FLAT — the moment it arches, you\'ve gone too far. Most important core exercise for your L2-L3.' }
 ];
 
-// ── DAY 2 ──
+// ── DAY 2: PUSH (Chest · Shoulders · Triceps) ── Mon or Wed at PF
 const D2 = [
     { id:'bench_press', n:1, name:'Barbell Bench Press', sets:4, reps:6,
-      w:{w1:145,w2:150,w3:155,w4:140}, rest:120, back:false,
-      cue:'Shoulders pinched back and down. Lower bar to mid-chest. Elbows ~45° from torso. Controlled descent — no bouncing. Warm-up set: 95–100 lbs × 8 easy reps first. Your 135 was too easy — these are your real working weights now.' },
-    { id:'shoulder_press', n:2, name:'Shoulder Press (Machine)', sets:3, reps:8,
-      w:{w1:45,w2:50,w3:55,w4:45}, rest:90, back:false,
-      cue:'Machine is the right call for your back — fixed path, back support, safer on L2-L3. Set seat so handles start at shoulder height. Press up smooth, don\'t slam the lockout. Control the descent. When you\'re ready to try DB overhead press: always seated, neutral grip (palms facing each other), brace your core before every rep, and never arch your lower back to grind a rep — that\'s when discs get loaded wrong.' },
-    { id:'dumbbell_row', n:3, name:'Dumbbell Row', sets:3, reps:8,
-      w:{w1:35,w2:40,w3:45,w4:35}, rest:75, back:false,
-      cue:'Brace on bench or hinge standing. Pull elbow straight back and up. Squeeze shoulder blade hard at the top. No rotation — core stays locked. You were at 30 lbs — bumped up, time to push this one.' },
-    { id:'trx_row', n:4, name:'TRX Row (or Lat Pulldown)', sets:3, reps:8,
-      w:{w1:90,w2:100,w3:110,w4:90}, rest:75, back:false,
-      cue:'At PF on lat pulldown: elbows pulled down and back to sides, bar stops at chest, full squeeze at bottom. You hit 100 lbs — that\'s now your Week 2 target. At home on TRX: lean back to an angle where 8 reps is genuinely hard, full scapular squeeze.' },
-    { id:'face_pull', n:5, name:'Face Pull (Band or Cable)', sets:3, reps:15,
+      w:{w1:145,w2:150,w3:155,w4:140}, rest:120, back:false, warmup:true,
+      cue:'Shoulders pinched back and down into the bench. Lower bar to mid-chest. Elbows at ~45° from torso — not flared 90°. Controlled descent, press explosively. Warmup row pre-loaded in log. 6 reps = strength range — these should feel heavy but controlled.' },
+    { id:'incline_press', n:2, name:'Incline DB Press', sets:3, reps:8,
+      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:90, back:false, warmup:true,
+      cue:'Set bench to 30–45°. Start with DBs at shoulder level, elbows about 45° from torso. Press up and slightly in at the top. Slow 2–3 second descent. NEW exercise — own the form at 25s before adding weight. Hits upper chest and front delts. At PF: grab a free incline bench from the dumbbell area. Warmup row pre-loaded.' },
+    { id:'shoulder_press', n:3, name:'Shoulder Press (Machine)', sets:3, reps:8,
+      w:{w1:50,w2:55,w3:60,w4:50}, rest:90, back:false,
+      cue:'Machine is the right call — fixed path, back support, safer on L2-L3. Set seat so handles start at shoulder height. Press up smooth, don\'t slam lockout. Control the descent 2 seconds. Bumped up weights — you\'ve got this.' },
+    { id:'face_pull', n:4, name:'Face Pull (Cable or Band)', sets:3, reps:15,
       w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
-      cue:'Anchor resistance band at face height (door frame or rack post). Pull handles to temples — elbows flare HIGH and wide, above the hands. Pause and squeeze rear delts hard at the end. At PF: use the cable machine with a rope. This exercise protects your rotator cuff long-term and directly counterbalances all the pressing work. Do NOT skip it.' },
-    { id:'db_curl', n:6, name:'DB Curl', sets:3, reps:10,
-      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:45, back:false,
-      cue:'Stand or sit, elbows pinned at your sides — they do NOT move. Full range: start with arms straight, curl all the way up to shoulder. Slow the negative: 3 full seconds on the way down. The descent is where growth happens most. Supinate (rotate palm up) as you curl. Do NOT swing your back — if you\'re swinging, drop 5 lbs.' },
-    { id:'tri_oh_extension', n:7, name:'Tricep Overhead Extension (DB)', sets:3, reps:12,
+      cue:'At PF: cable machine with rope, set high. Pull handles to temples — elbows flare HIGH and WIDE above your hands. Pause and squeeze rear delts hard at the end. This protects your rotator cuff long-term and directly counterbalances all your pressing work. Do NOT skip this. Non-negotiable.' },
+    { id:'tri_oh_extension', n:5, name:'Tricep Overhead Extension (DB)', sets:3, reps:12,
       w:{w1:35,w2:40,w3:45,w4:35}, rest:45, back:false,
-      cue:'Hold one dumbbell with both hands above your head, elbows pointing forward. Lower it behind your head slowly until you feel a full stretch in the tricep, then press back up. Elbows stay NARROW — do not let them flare out. This hits the long head of the tricep — the biggest portion of the muscle and the one that adds the most visible thickness to your arms. Can be seated or standing.' },
-    { id:'plank', n:8, name:'Plank Hold', sets:2, reps:'40 sec',
-      w:{w1:0,w2:0,w3:0,w4:0}, rest:45, back:true,
-      cue:'Forearms on floor. Hips level — not sagging, not piked. Glutes on. Breathe. Progress to 60s when 40s is easy. If time is short today, this is the one to skip — arms and pressing work are higher priority.' }
+      cue:'Hold one dumbbell with both hands above your head, elbows pointing forward. Lower it behind your head slowly — full stretch in the tricep. Press back up. Elbows stay NARROW. Hits the long head of the tricep — the biggest portion, adds the most visible thickness to your arms. Can be seated or standing.' },
+    { id:'cable_pushdown', n:6, name:'Cable Pushdown (Triceps)', sets:3, reps:15,
+      w:{w1:30,w2:35,w3:40,w4:30}, rest:45, back:false,
+      cue:'Cable machine at PF — rope or straight bar. Elbows PINNED at your sides — they do NOT move. Push to full extension, hard squeeze at the bottom, 2-second control on the way back up. Overhead extension + cable pushdown = two different angles on your triceps. That combination is what builds arm thickness. Rope lets you rotate wrists at the bottom for extra squeeze.' },
+    { id:'db_curl', n:7, name:'DB Curl', sets:3, reps:10,
+      w:{w1:25,w2:27.5,w3:30,w4:25}, rest:45, back:false,
+      cue:'Elbows pinned at sides — they do NOT move forward. Full range: start arms straight, curl all the way up. Slow negative: 3 full seconds down. Supinate (rotate palm up) as you curl. Second weekly hit for your biceps = direct arm size gains. Do NOT swing — if you\'re swinging, drop 5 lbs.' }
 ];
 
-// ── DAY 3 ──
+// ── DAY 3: PULL SECTION (Home, done before KB circuit) ──
+const D3_PULL = [
+    { id:'trx_row', n:1, name:'TRX Row', sets:3, reps:8,
+      w:{w1:'Moderate lean',w2:'Steep lean',w3:'Steeper lean',w4:'Moderate lean'}, rest:75, back:false, warmup:true,
+      cue:'Grab handles, lean back with arms straight — feet further out = more horizontal = harder. Pull chest to handles: elbows drive back and up, squeeze shoulder blades HARD at top, control descent 2–3 seconds. This IS your lat pulldown at home. Progress by walking feet further out each week to increase the lean angle. Warmup set pre-loaded — do 1 easy set to warm up lats and elbows first.' },
+    { id:'dumbbell_row', n:2, name:'DB Row', sets:3, reps:8,
+      w:{w1:35,w2:40,w3:45,w4:35}, rest:75, back:false,
+      cue:'Plant knee and same-side hand on bench. Pull elbow straight back to your hip — squeeze your shoulder blade HARD at the top. No rotation — hips stay square. Slow 2-second lower. You were doing these on Wednesdays; they now live on Fridays as your dedicated pull day opener. Pull with your BACK — the dumbbell just hangs from your hand.' }
+];
+
+// ── DAY 3: KB CIRCUIT ──
 const D3_CIRCUIT = [
     { id:'kb_swing', n:1, name:'KB Swing', work:30, rest:15,
       w:{w1:25,w2:30,w3:35,w4:25}, back:true,
       cue:'Explosive hip hinge. Bell floats to shoulder height — not overhead. Snap hips, squeeze glutes hard at top. Neutral spine the whole way.' },
     { id:'kb_goblet_squat', n:2, name:'KB Goblet Squat', work:30, rest:15,
       w:{w1:25,w2:30,w3:35,w4:25}, back:true,
-      cue:'Same pattern as Day 1 — KB at chest, knees out, full depth. Pace yourself in the circuit. Form over speed.' },
+      cue:'KB at chest, knees out, full depth. Pace yourself in the circuit. Form over speed.' },
     { id:'kb_rdl', n:3, name:'KB Romanian Deadlift', work:30, rest:15,
       w:{w1:25,w2:30,w3:35,w4:25}, back:true,
       cue:'Hinge back, feel the hamstring — same movement as Day 1 RDL. Neutral spine. Don\'t rush reps in the circuit.' },
@@ -424,29 +455,30 @@ const D3_CIRCUIT = [
       cue:'Slight dip at knees, use leg drive to launch the press. Lockout overhead, lower with control. Alternate sides or both arms.' },
     { id:'renegade_row', n:5, name:'Renegade Row', work:30, rest:15,
       w:{w1:20,w2:25,w3:25,w4:20}, back:true,
-      cue:'Start in a firm plank gripping two KBs shoulder-width apart. Row one KB to your hip — the other arm LOCKS and doesn\'t move. Hips stay completely square — ZERO rotation. Alternate sides. The challenge is NOT the row — it\'s keeping your hips level against the rotational pull. That anti-rotation IS the exercise, and it\'s directly protecting your lower back. ⚠️ Back check: if your lower back starts to fatigue, stop immediately — a tired back in this position is a risk. Quality over quantity.' },
+      cue:'Firm plank gripping two KBs shoulder-width. Row one KB to your hip — other arm LOCKS and doesn\'t move. Hips stay completely SQUARE — zero rotation. Alternate sides. The challenge is NOT the row — keeping hips level against the pull IS the exercise. Directly protects your lower back. ⚠️ If lower back fatigues, stop immediately — quality over quantity.' },
     { id:'farmer_carry', n:6, name:'Farmer Carry', work:30, rest:15,
       w:{w1:30,w2:35,w3:40,w4:30}, back:false,
-      cue:'Walk the garage and back with KBs at sides. Tall posture, level shoulders, core braced. Simple and brutal. Grip strength + core endurance in one shot.' }
+      cue:'Walk garage and back with KBs at sides. Tall posture, level shoulders, core braced. Simple and brutal. Grip strength + core endurance in one shot.' }
 ];
 
+// ── DAY 3: ARM FINISHER ──
 const D3_FINISHER = [
     { id:'d3_curl', n:1, name:'DB Curl', sets:2, reps:12,
       w:{w1:20,w2:22.5,w3:25,w4:20}, rest:45, back:false,
-      cue:'Do these AFTER completing all 4 circuit rounds. 2 sets only, quick and focused. Elbows pinned, full range, 3-second slow negative. This second weekly hit on your biceps is what drives arm growth — don\'t skip it.' },
+      cue:'Do these AFTER completing all 4 circuit rounds. 2 sets only — quick and focused. Elbows pinned, full range, 3-second slow negative. This second weekly hit on biceps is what drives arm growth. Don\'t skip it just because you\'re tired.' },
     { id:'band_pushdown', n:2, name:'Band Tricep Pushdown', sets:2, reps:15,
       w:{w1:'Light Band',w2:'Light Band',w3:'Med Band',w4:'Light Band'}, rest:45, back:false,
-      cue:'Loop band over pull-up bar or high rack anchor. Grab both ends, elbows pinned at your sides — they don\'t move. Push straight down, squeeze hard at the bottom, control back up. At PF on Friday: use cable pushdown machine instead. 2 sets, same idea.' }
+      cue:'🏠 Home version: Loop your resistance band over the top of your squat rack bar. Hold both ends, step back slightly, elbows PINNED at your sides — they stay there the entire time. Push straight down until arms fully extend, hard squeeze at bottom, control back up. This second tricep hit (after Wednesday\'s overhead extension and cable work) is what puts size on your arms. 2 sets, done.' }
 ];
 
 const SCHED = [
-    {day:'Monday',    label:'Day 1 — Lower Body',            soft:false},
-    {day:'Tuesday',   label:'Zone 2 Cardio — 30 min Peloton/Rogue', soft:true},
-    {day:'Wednesday', label:'Day 2 — Upper Push & Pull',     soft:false},
-    {day:'Thursday',  label:'Zone 2 Cardio or Rest',         soft:true},
-    {day:'Friday',    label:'Day 3 — KB HIIT Circuit',       soft:false},
-    {day:'Saturday',  label:'Active Recovery / Walk / Hike', soft:true},
-    {day:'Sunday',    label:'Full Rest',                     soft:true}
+    {day:'Monday',    label:'Day 1 — Lower Body (PF or Home)',              soft:false},
+    {day:'Tuesday',   label:'Zone 2 Cardio — 30 min Peloton/Rogue',        soft:true},
+    {day:'Wednesday', label:'Day 2 — Push: Chest, Shoulders, Triceps (PF)',soft:false},
+    {day:'Thursday',  label:'Zone 2 Cardio or Rest',                        soft:true},
+    {day:'Friday',    label:'Day 3 — Pull + KB HIIT (Home)',                soft:false},
+    {day:'Saturday',  label:'Active Recovery / Walk / Hike',                soft:true},
+    {day:'Sunday',    label:'Full Rest',                                     soft:true}
 ];
 
 // ══════════════════════════════════════════════
@@ -468,7 +500,7 @@ const NOTE_PREFIX = 'scott_note_';
 
 function wt(w) {
     const v = w[`w${week}`] ?? w.w1;
-    if (v === 0) return 'Bodyweight';
+    if (v === null || v === undefined || v === 0) return 'Bodyweight';
     if (typeof v === 'string') return v;
     return v + ' lbs';
 }
@@ -483,7 +515,7 @@ function todayKey() {
 
 function todayName() {
     const k = todayKey();
-    return {day1:'Day 1 — Lower Body', day2:'Day 2 — Upper Push & Pull', day3:'Day 3 — KB HIIT', rest:'Rest / Zone 2 Day'}[k];
+    return {day1:'Day 1 — Lower Body', day2:'Day 2 — Push', day3:'Day 3 — Pull + KB HIIT', rest:'Rest / Zone 2 Day'}[k];
 }
 
 function dateStr(d) {
@@ -557,7 +589,7 @@ function renderHeader() {
     const k = todayKey();
     document.getElementById('hdrSub').textContent = k==='rest'
         ? 'Active recovery + mobility work'
-        : `Week ${week} · ${k==='day3'?'20':'40'} min`;
+        : `Week ${week} · ${k==='day3'?'40':'45'} min`;
 }
 
 function renderWeekBtns() {
@@ -566,6 +598,26 @@ function renderWeekBtns() {
     ).join('');
     document.getElementById('pfill').style.width = (week/4*100)+'%';
     document.getElementById('wbarLabel').textContent = `Week ${week} of 4${week===4?' — Deload':''}`;
+}
+
+// Warmup set row — pre-populated with suggested weight
+function warmupRow(exId, workingWt) {
+    let sugVal = '', phW = '~65%', phR = '8-10';
+    if (typeof workingWt === 'number' && workingWt > 0) {
+        sugVal = Math.round(workingWt * 0.65 / 5) * 5;
+        phW = sugVal + ' lbs';
+        sugVal = String(sugVal);
+    } else if (!workingWt || workingWt === 0) {
+        phW = 'BW'; phR = '5-8';
+    } else {
+        phW = 'Easy';
+    }
+    return `<div class="log-set-row">
+        <span class="log-set-label warmup-lbl">Warmup</span>
+        <input class="log-input warmup-input" type="number" value="${sugVal}" placeholder="${phW}" inputmode="decimal">
+        <span class="log-x">×</span>
+        <input class="log-input warmup-input" type="number" placeholder="${phR}" inputmode="numeric">
+    </div>`;
 }
 
 function setRow(exId, i) {
@@ -579,7 +631,13 @@ function setRow(exId, i) {
 
 function logPanel(ex, dayKey, isCircuit) {
     const defaultSets = isCircuit ? 4 : (ex.sets || 3);
-    const rows = Array.from({length:defaultSets}, (_,i) => setRow(ex.id||ex.name, i)).join('');
+    let rows = '';
+    // Auto-add warmup row for compound exercises that need one
+    if (ex.warmup && !isCircuit) {
+        const workingWt = ex.w ? (ex.w[`w${week}`] ?? ex.w.w1) : null;
+        rows += warmupRow(ex.id||ex.name, workingWt);
+    }
+    rows += Array.from({length:defaultSets}, (_,i) => setRow(ex.id||ex.name, i)).join('');
     return `
     <div class="log-panel" id="lp-${ex.id||ex.name}">
         <div class="log-panel-title">📋 Log Your Sets  <span style="color:var(--muted);font-weight:400">(lbs × reps)</span></div>
@@ -664,17 +722,21 @@ function renderToday() {
         html += gymToggleHTML();
         html += `<div class="info-box red"><div class="ib-title">⚠️ Lower Back Protocol</div><div class="ib-body"><ul>
             <li>Neutral spine on ALL exercises — no rounding</li><li>Stop if back twinges — form before weight</li><li>Leave 2–3 reps in the tank</li></ul></div></div>`;
-        html += `<div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div><div class="ib-body">First exercise: 1 easy set at 50–60% weight for 8–10 reps. Gets joints ready, protects your blood pressure.</div></div>`;
+        html += `<div class="info-box purple"><div class="ib-title">💪 Warmup Sets Auto-Loaded</div><div class="ib-body">Warmup sets are pre-loaded in the log for compound exercises. Do them first.</div></div>`;
         getD1().forEach(ex => { html += exCard(ex, 'day1'); });
         html += notePanel('day1');
     } else if (k === 'day2') {
-        html += `<div class="info-box purple"><div class="ib-title">💪 Warm-Up Set</div><div class="ib-body">Bench Press: 95 lbs × 8 easy reps before your working sets.</div></div>`;
+        html += `<div class="info-box blue"><div class="ib-title">🏋️ Planet Fitness — Push Day</div><div class="ib-body">Bench, incline, shoulder machine, cable work. You have everything here.</div></div>`;
+        html += `<div class="info-box purple"><div class="ib-title">💪 Warmup Sets Auto-Loaded</div><div class="ib-body">Warmup rows pre-loaded for Bench and Incline. Do them first at the suggested weight.</div></div>`;
         D2.forEach(ex => { html += exCard(ex, 'day2'); });
         html += notePanel('day2');
     } else if (k === 'day3') {
-        html += `<div class="info-box"><div class="ib-title">Circuit</div><div class="ib-body">4 rounds · 30s work / 15s rest · 60s between rounds · ~20 min</div></div>`;
+        html += `<div class="info-box blue"><div class="ib-title">🏠 Home Gym — Pull + KB HIIT</div><div class="ib-body">Pull work first → KB Circuit 4 rounds → Arm Finisher. ~40 min total.</div></div>`;
+        html += `<div class="sub-hdr blue">🔵 Pull Section — Do These First</div>`;
+        D3_PULL.forEach(ex => { html += exCard(ex, 'day3'); });
+        html += `<div class="sub-hdr orange">⚡ KB Circuit · 4 Rounds · 30s/15s</div>`;
         D3_CIRCUIT.forEach(ex => { html += exCard(ex, 'day3', true); });
-        html += `<div class="sec-title" style="font-size:var(--fs);margin-top:16px;margin-bottom:8px;color:var(--green)">💪 Arm Finisher — After All 4 Rounds</div>`;
+        html += `<div class="sub-hdr green">💪 Arm Finisher — After All 4 Rounds</div>`;
         D3_FINISHER.forEach(ex => { html += exCard(ex, 'day3fin'); });
         html += notePanel('day3');
     }
@@ -686,9 +748,10 @@ function renderDay(exArr, dayKey, containerId, isCircuit=false) {
 }
 
 function renderD3() {
-    document.getElementById('d3-body').innerHTML = D3_CIRCUIT.map(ex => exCard(ex, 'day3', true)).join('');
+    document.getElementById('d3-pull').innerHTML    = D3_PULL.map(ex => exCard(ex, 'day3')).join('');
+    document.getElementById('d3-body').innerHTML    = D3_CIRCUIT.map(ex => exCard(ex, 'day3', true)).join('');
     document.getElementById('d3-finisher').innerHTML = D3_FINISHER.map(ex => exCard(ex, 'day3fin')).join('');
-    document.getElementById('d3-note').innerHTML = notePanel('day3');
+    document.getElementById('d3-note').innerHTML    = notePanel('day3');
 }
 
 function renderNotePanel(dayKey, containerId) {
@@ -714,12 +777,17 @@ function renderHistory() {
             return;
         }
         keys.sort().reverse();
-        const dayNames = {day1:'Day 1 — Lower Body', day2:'Day 2 — Upper Push & Pull', day3:'Day 3 — KB HIIT'};
+        const dayNames = {
+            day1:'Day 1 — Lower Body',
+            day2:'Day 2 — Push',
+            day3:'Day 3 — Pull + KB HIIT',
+            day3fin:'Day 3 (Arm Finisher)'
+        };
         let html = '';
         for (const key of keys.slice(0,20)) {
             const parts = key.replace(LOG_PREFIX,'').split('_');
             const datepart = parts[0];
-            const daypart = parts[1];
+            const daypart = parts.slice(1).join('_');
             const data = getLog(key);
             const exNames = Object.keys(data);
             if (!exNames.length) continue;
@@ -782,13 +850,10 @@ function setWeek(w) {
 function setGym(g) {
     gym = g;
     try { localStorage.setItem('scott_gym', g); } catch(e) {}
-    // Update all toggle buttons
     document.querySelectorAll('.gym-btn').forEach(b => {
         b.classList.toggle('on', b.dataset.gym === g);
     });
-    // Re-render Day 1 content
     renderDay(getD1(), 'day1', 'd1-body');
-    // Re-render Today if it's a Day 1 day
     if (todayKey() === 'day1') renderToday();
 }
 
@@ -868,17 +933,21 @@ function generateExport() {
         lines.push(`Generated: ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}`);
         lines.push('');
 
-        // Structured workout sessions
         const keys = Object.keys(localStorage).filter(k => k.startsWith(LOG_PREFIX));
         keys.sort().reverse();
-        const dayNames = {day1:'Day 1 (Lower Body)', day2:'Day 2 (Upper Push & Pull)', day3:'Day 3 (KB HIIT)'};
+        const dayNames = {
+            day1:'Day 1 (Lower Body)',
+            day2:'Day 2 (Push)',
+            day3:'Day 3 (Pull + KB HIIT)',
+            day3fin:'Day 3 (Arm Finisher)'
+        };
 
         if (keys.length) {
             lines.push('--- LOGGED WORKOUTS ---');
             for (const key of keys.slice(0,14)) {
                 const parts = key.replace(LOG_PREFIX,'').split('_');
                 const datepart = parts[0];
-                const daypart = parts[1];
+                const daypart = parts.slice(1).join('_');
                 const data = getLog(key);
                 const exNames = Object.keys(data);
                 if (!exNames.length) continue;
@@ -897,7 +966,6 @@ function generateExport() {
             lines.push('No structured workouts logged yet.');
         }
 
-        // Ad hoc activities
         const adhoc = JSON.parse(localStorage.getItem(ADHOC_KEY)) || [];
         if (adhoc.length) {
             lines.push('\n--- AD HOC ACTIVITIES ---');
