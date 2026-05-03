@@ -165,6 +165,34 @@
         .sub-hdr.blue  { background:#0a1525; color:var(--blue);   border-left:3px solid var(--blue); }
         .sub-hdr.orange{ background:#1a0e00; color:var(--orange); border-left:3px solid var(--orange); }
         .sub-hdr.green { background:#0a1800; color:var(--green);  border-left:3px solid var(--green); }
+
+        /* ── REST TIMER BAR ── */
+        .rest-bar { position:fixed; bottom:0; left:0; right:0; background:#080d18; border-top:2px solid var(--blue); padding:10px 14px 12px; display:none; z-index:500; }
+        .rest-bar.on { display:block; }
+        .rest-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+        .rest-big { font-size:var(--fs-xxl); font-weight:800; color:var(--orange); min-width:62px; transition:color .3s; line-height:1; }
+        .rest-big.go { color:var(--green); }
+        .rest-label { font-size:var(--fs-sm); color:var(--subtle); flex:1; }
+        .rest-skip { padding:6px 14px; background:var(--border); border:none; color:var(--muted); border-radius:6px; font-size:var(--fs-sm); cursor:pointer; font-weight:700; }
+        .rest-prog { width:100%; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+        .rest-pfill { height:100%; background:var(--blue); border-radius:2px; }
+
+        /* ── RPE STRIP ── */
+        .rpe-strip { display:none; align-items:center; gap:6px; margin-bottom:8px; }
+        .rpe-strip.on { display:flex; }
+        .rpe-lbl { font-size:11px; color:var(--muted); white-space:nowrap; }
+        .rpe-btn { flex:1; padding:5px 2px; background:var(--border); border:none; color:var(--text); border-radius:5px; font-size:var(--fs-sm); cursor:pointer; font-weight:700; text-align:center; }
+        .rpe-btn:hover, .rpe-btn.sel { background:var(--orange); color:#000; }
+        .rpe-done { font-size:11px; color:var(--green); display:none; }
+
+        /* ── OVERLOAD PANEL ── */
+        .overload-row { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:var(--fs-sm); }
+        .overload-row:last-child { border-bottom:none; }
+        .overload-name { flex:1; color:var(--text); }
+        .overload-last { color:var(--muted); font-size:12px; }
+        .overload-arrow { color:var(--muted); font-size:12px; }
+        .overload-next { color:var(--green); font-weight:800; }
+        .overload-tag { font-size:10px; color:var(--green); background:#0a1800; padding:2px 6px; border-radius:4px; }
     </style>
 </head>
 <body>
@@ -280,9 +308,36 @@
             <div class="adhoc-list" id="adhocList"></div>
         </div>
 
+        <div class="info-box green" style="margin-bottom:14px">
+            <div class="ib-title">📈 Next Session Targets</div>
+            <div id="overloadPanel" style="font-size:var(--fs-sm);color:var(--muted)">Log some sessions first to see suggested weights.</div>
+        </div>
+
         <div id="hist-body"></div>
     </div>
 
+</div>
+
+<!-- REST TIMER + RPE BAR -->
+<div class="rest-bar" id="restBar">
+    <div class="rpe-strip" id="rpeStrip">
+        <span class="rpe-lbl">Effort:</span>
+        <button class="rpe-btn" onclick="logRpe(1)">1</button>
+        <button class="rpe-btn" onclick="logRpe(2)">2</button>
+        <button class="rpe-btn" onclick="logRpe(3)">3</button>
+        <button class="rpe-btn" onclick="logRpe(4)">4</button>
+        <button class="rpe-btn" onclick="logRpe(5)">5</button>
+        <span class="rpe-done" id="rpeDone">✓ Saved</span>
+    </div>
+    <div class="rest-bar-row">
+        <div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:1px">REST</div>
+            <div class="rest-big" id="restBig">90</div>
+        </div>
+        <div class="rest-label" id="restLabel">Recover fully before next set</div>
+        <button class="rest-skip" onclick="stopRest()">Skip ↓</button>
+    </div>
+    <div class="rest-prog"><div class="rest-pfill" id="restFill" style="width:100%"></div></div>
 </div>
 
 <script>
@@ -643,7 +698,7 @@ function logPanel(ex, dayKey, isCircuit) {
         <div class="log-panel-title">📋 Log Your Sets  <span style="color:var(--muted);font-weight:400">(lbs × reps)</span></div>
         <div class="log-sets" id="ls-${ex.id||ex.name}">${rows}</div>
         <button class="add-set-btn" onclick="addSet('${ex.id||ex.name}')">+ Add Set (warmup or extra)</button>
-        <button class="log-save-btn" onclick="saveExercise('${ex.id||ex.name}','${dayKey}')">Save Sets</button>
+        <button class="log-save-btn" onclick="saveExercise('${ex.id||ex.name}','${dayKey}',${isCircuit ? 0 : (ex.rest||0)})">Save Sets</button>
         <div class="log-saved-msg" id="lsaved-${ex.id||ex.name}">✅ Saved!</div>
     </div>`;
 }
@@ -715,7 +770,7 @@ function restCard() {
 
 function renderToday() {
     const k = todayKey();
-    let html = '';
+    let html = checkinHTML(); // Sunday check-in panel
     if (k === 'rest') {
         html = restCard();
     } else if (k === 'day1') {
@@ -813,6 +868,7 @@ function renderHistory() {
         document.getElementById('hist-body').innerHTML = `<div class="hist-empty">Log unavailable in this browser.</div>`;
     }
     renderAdhocList();
+    renderOverloadPanel();
 }
 
 function renderAdhocList() {
@@ -882,7 +938,7 @@ function addSet(exId) {
     container.insertAdjacentHTML('beforeend', setRow(exId, i));
 }
 
-function saveExercise(exId, dayKey) {
+function saveExercise(exId, dayKey, restSec) {
     const logKey = todayLogKey(dayKey);
     const existing = getLog(logKey);
     const container = document.getElementById('ls-'+exId);
@@ -896,6 +952,8 @@ function saveExercise(exId, dayKey) {
     saveLog(logKey, existing);
     const msg = document.getElementById(`lsaved-${exId}`);
     if (msg) { msg.style.display='block'; setTimeout(()=>msg.style.display='none', 2000); }
+    // Start rest timer
+    if (restSec) startRest(restSec, restMsg(restSec), exId, dayKey);
 }
 
 function toggleTV() {
@@ -953,9 +1011,11 @@ function generateExport() {
                 if (!exNames.length) continue;
                 lines.push(`\n${datepart} · ${dayNames[daypart]||daypart}`);
                 for (const name of exNames) {
+                    if (name.startsWith('_rpe_')) continue;
                     const sets = data[name];
+                    const rpe = data['_rpe_'+name];
                     const str = sets.filter(s=>s.w||s.r).map((s,i)=>`Set${i+1}: ${s.w||'?'}lbs×${s.r||'?'}`).join(', ');
-                    if (str) lines.push(`  ${name}: ${str}`);
+                    if (str) lines.push(`  ${name}: ${str}${rpe ? ` (RPE ${rpe}/5)` : ''}`);
                 }
                 try {
                     const noteVal = localStorage.getItem(`${NOTE_PREFIX}${datepart}_${daypart}`) || '';
@@ -971,6 +1031,19 @@ function generateExport() {
             lines.push('\n--- AD HOC ACTIVITIES ---');
             adhoc.slice(-14).reverse().forEach(e => {
                 lines.push(`  ${e.date}: ${e.activity}`);
+            });
+        }
+
+        // Weekly check-ins
+        const ciKeys = Object.keys(localStorage).filter(k => k.startsWith('scott_checkin_'));
+        if (ciKeys.length) {
+            lines.push('\n--- WEEKLY CHECK-INS ---');
+            ciKeys.sort().reverse().slice(0,8).forEach(k => {
+                try {
+                    const ci = JSON.parse(localStorage.getItem(k)) || {};
+                    const date = k.replace('scott_checkin_','');
+                    lines.push(`  ${date}: Rating ${ci.rating}/5 — ${ci.note || 'No notes'}`);
+                } catch(e) {}
             });
         }
 
@@ -1003,6 +1076,186 @@ function copyExport() {
         document.getElementById('copyBtn').textContent = '✅ Copied!';
         setTimeout(() => document.getElementById('copyBtn').textContent = '📋 Copy to Clipboard', 2000);
     }
+}
+
+// ══════════════════════════════════════════════
+//  REST TIMER + RPE
+// ══════════════════════════════════════════════
+
+let restIv = null, restTotal = 0, restCur = 0;
+let rpeExId = null, rpeDayKey = null;
+
+function startRest(sec, label, exId, dayKey) {
+    if (!sec) return;
+    if (restIv) clearInterval(restIv);
+    restTotal = restCur = sec;
+    rpeExId = exId; rpeDayKey = dayKey;
+    const big = document.getElementById('restBig');
+    const lbl = document.getElementById('restLabel');
+    const fill = document.getElementById('restFill');
+    const bar = document.getElementById('restBar');
+    const strip = document.getElementById('rpeStrip');
+    const done = document.getElementById('rpeDone');
+    if (big) { big.textContent = sec; big.classList.remove('go'); }
+    if (lbl) lbl.textContent = label || 'Recover fully';
+    if (fill) { fill.style.transition = 'none'; fill.style.width = '100%'; }
+    if (bar) bar.classList.add('on');
+    // Show RPE strip, reset buttons
+    if (strip) strip.classList.add('on');
+    if (done) done.style.display = 'none';
+    document.querySelectorAll('.rpe-btn').forEach(b => { b.classList.remove('sel'); b.style.display=''; });
+    // Animate fill bar
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            if (fill) { fill.style.transition = `width ${sec}s linear`; fill.style.width = '0%'; }
+        });
+    });
+    // Auto-hide RPE after 10s
+    setTimeout(() => { if (strip) strip.classList.remove('on'); }, 10000);
+    restIv = setInterval(() => {
+        restCur--;
+        if (big) { big.textContent = restCur; big.classList.toggle('go', restCur <= 5 && restCur > 0); }
+        if (restCur <= 0) { stopRest(); beep(); try { navigator.vibrate([400,100,400]); } catch(e) {} }
+    }, 1000);
+}
+
+function stopRest() {
+    if (restIv) { clearInterval(restIv); restIv = null; }
+    const bar = document.getElementById('restBar');
+    const strip = document.getElementById('rpeStrip');
+    if (bar) bar.classList.remove('on');
+    if (strip) strip.classList.remove('on');
+}
+
+function beep() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [0, 0.22, 0.44].forEach(t => {
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.frequency.value = 660;
+            g.gain.setValueAtTime(0.3, ctx.currentTime + t);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.22);
+            o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.25);
+        });
+    } catch(e) {}
+}
+
+function logRpe(val) {
+    if (rpeExId && rpeDayKey) {
+        const lk = todayLogKey(rpeDayKey);
+        const d = getLog(lk);
+        d['_rpe_' + rpeExId] = val;
+        saveLog(lk, d);
+    }
+    document.querySelectorAll('.rpe-btn').forEach(b => b.style.display = 'none');
+    const done = document.getElementById('rpeDone');
+    if (done) { done.style.display = 'inline'; done.textContent = `✓ RPE ${val}/5`; }
+    setTimeout(() => { const s = document.getElementById('rpeStrip'); if(s) s.classList.remove('on'); }, 1500);
+    rpeExId = null;
+}
+
+function restMsg(sec) {
+    if (sec >= 120) return 'Heavy lift — full recovery needed';
+    if (sec >= 90) return 'Compound — breathe and reset';
+    if (sec >= 60) return 'Mid rest — stay loose';
+    return 'Quick rest — stay ready';
+}
+
+// ══════════════════════════════════════════════
+//  PROGRESSIVE OVERLOAD PANEL
+// ══════════════════════════════════════════════
+
+const LOWER_IDS = new Set(['goblet_squat','romanian_deadlift','bulgarian_split_squat','glute_bridge','leg_press','leg_curl','kb_swing','kb_goblet_squat','kb_rdl','farmer_carry','calf_raise']);
+const ARM_IDS   = new Set(['db_curl','d3_curl','tri_oh_extension','cable_pushdown','band_pushdown']);
+
+function renderOverloadPanel() {
+    const pairs = [
+        ...D1_HOME.map(e => ({ex:e, dk:'day1'})),
+        ...D2.map(e => ({ex:e, dk:'day2'})),
+        ...D3_PULL.map(e => ({ex:e, dk:'day3'})),
+        ...D3_FINISHER.map(e => ({ex:e, dk:'day3fin'})),
+    ];
+    const rows = [];
+    for (const {ex, dk} of pairs) {
+        if (!ex.id) continue;
+        const w1 = ex.w?.w1;
+        if (!w1 || typeof w1 !== 'number' || w1 === 0) continue;
+        const last = getLastSession(dk);
+        if (!last || !last[ex.id]) continue;
+        const sets = last[ex.id].filter(s => s.w && parseFloat(s.w) > 0 && s.r);
+        const working = ex.warmup ? sets.slice(1) : sets;
+        if (!working.length) continue;
+        const lastW = parseFloat(working[working.length - 1].w);
+        if (!lastW) continue;
+        const inc = LOWER_IDS.has(ex.id) ? 5 : 2.5;
+        const nextW = lastW + inc;
+        rows.push(`<div class="overload-row">
+            <span class="overload-name">${ex.name}</span>
+            <span class="overload-last">${lastW} lbs</span>
+            <span class="overload-arrow">→</span>
+            <span class="overload-next">${nextW} lbs</span>
+            <span class="overload-tag">+${inc}</span>
+        </div>`);
+    }
+    const el = document.getElementById('overloadPanel');
+    if (!el) return;
+    el.innerHTML = rows.length
+        ? '<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Based on last session · Lower body +5 lbs · Upper +2.5 lbs</div>' + rows.join('')
+        : '<div style="font-size:var(--fs-sm);color:var(--muted)">Log some sessions first to see targets.</div>';
+}
+
+// ══════════════════════════════════════════════
+//  SUNDAY CHECK-IN
+// ══════════════════════════════════════════════
+
+function checkinHTML() {
+    if (new Date().getDay() !== 0) return '';
+    const d = new Date();
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const key = `scott_checkin_${ds}`;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(key)); } catch(e) {}
+    if (saved?.done) {
+        return `<div class="info-box green" style="margin-bottom:12px">
+            <div class="ib-title">✅ Weekly Check-in Done</div>
+            <div class="ib-body">Week rating: ${saved.rating}/5 · ${saved.note || 'No notes'}</div>
+        </div>`;
+    }
+    return `<div class="info-box yellow" style="margin-bottom:12px" id="checkinBox">
+        <div class="ib-title">📋 Sunday Check-in — How Was Your Week?</div>
+        <div class="ib-body" style="margin-bottom:10px">Quick rating + any notes for your trainer.</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px" id="checkinBtns">
+            ${[1,2,3,4,5].map(n=>`<button onclick="pickRating(${n})" id="wr${n}" style="flex:1;padding:8px 2px;background:var(--border);border:none;color:var(--text);border-radius:6px;font-size:var(--fs-sm);font-weight:700;cursor:pointer">${n}${'⭐'.repeat(n)}</button>`).join('')}
+        </div>
+        <input type="hidden" id="weekRating" value="0">
+        <textarea id="checkinNote" style="width:100%;background:#1a1500;border:1px solid #555;color:var(--text);border-radius:6px;padding:10px;font-size:var(--fs-sm);resize:vertical;min-height:65px;font-family:inherit" placeholder="Energy? Sleep? PRs? Back ok? Anything for your trainer to know..."></textarea>
+        <button onclick="saveCheckin()" style="width:100%;padding:9px;background:#f9ca24;color:#000;border:none;border-radius:6px;font-size:var(--fs-sm);font-weight:700;cursor:pointer;margin-top:8px">Save Check-in</button>
+    </div>`;
+}
+
+function pickRating(n) {
+    document.getElementById('weekRating').value = n;
+    [1,2,3,4,5].forEach(i => {
+        const b = document.getElementById('wr'+i);
+        if (!b) return;
+        b.style.background = (i===n) ? '#f9ca24' : 'var(--border)';
+        b.style.color = (i===n) ? '#000' : 'var(--text)';
+    });
+}
+
+function saveCheckin() {
+    const d = new Date();
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const key = `scott_checkin_${ds}`;
+    const rating = parseInt(document.getElementById('weekRating')?.value) || 0;
+    const note = document.getElementById('checkinNote')?.value.trim() || '';
+    try { localStorage.setItem(key, JSON.stringify({rating, note, done:true})); } catch(e) {}
+    const box = document.getElementById('checkinBox');
+    if (box) box.outerHTML = `<div class="info-box green" style="margin-bottom:12px">
+        <div class="ib-title">✅ Check-in Saved</div>
+        <div class="ib-body">Week rating: ${rating}/5 · ${note || 'No notes'}</div>
+    </div>`;
 }
 
 // ══════════════════════════════════════════════
